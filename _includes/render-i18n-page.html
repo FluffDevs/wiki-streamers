@@ -1,0 +1,11 @@
+{% assign lang = page.lang | default: site.default_lang %}
+{% assign ref = page.ref %}
+{% assign page_i18n = site.data.i18n_pages[lang][ref] %}
+{% if page_i18n == nil %}
+  {% assign page_i18n = site.data.i18n_pages[site.default_lang][ref] %}
+{% endif %}
+{% if page_i18n %}
+{{ page_i18n.body | markdownify }}
+{% else %}
+<p>Missing i18n content for ref: {{ ref }} (lang: {{ lang }})</p>
+{% endif %}

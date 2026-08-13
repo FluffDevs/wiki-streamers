@@ -1,0 +1,11 @@
+language_code: en
+language_name: English
+switcher_language: Language
+locale_home_label: Home EN
+locale_other_label: Accueil FR
+nav_guides: Configuration Guides
+nav_prerequisites: Prerequisites
+nav_credentials: Broadcast Credentials
+nav_configure_obs: Configure OBS
+nav_go_live: Go Live
+nav_troubleshooting: Troubleshooting

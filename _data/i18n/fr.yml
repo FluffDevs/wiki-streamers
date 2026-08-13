@@ -1,0 +1,11 @@
+language_code: fr
+language_name: Francais
+switcher_language: Langue
+locale_home_label: Accueil FR
+locale_other_label: Home EN
+nav_guides: Guides de configuration
+nav_prerequisites: Pre-requis
+nav_credentials: Identifiants de diffusion
+nav_configure_obs: Configurer OBS
+nav_go_live: Lancer son stream
+nav_troubleshooting: Troubleshooting

@@ -1,0 +1,5 @@
+{% assign current_lang = page.lang | default: site.default_lang %}
+{% assign dict = site.data.i18n[current_lang] %}
+{% assign fallback = site.data.i18n[site.default_lang] %}
+{% assign text = dict[include.key] | default: fallback[include.key] | default: include.key %}
+{{ text }}

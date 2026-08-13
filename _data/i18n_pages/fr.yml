@@ -1,0 +1,484 @@
+home:
+  body: |
+    # Wiki Streamers Fluff Radio
+
+    Ce wiki explique comment configurer OBS pour diffuser sur le serveur Fluff Radio.
+
+    Objectif: vous donner une procedure fiable, reproductible et securisee pour passer en direct.
+
+    ## Versions de langue
+
+    - Francais: [Accueil FR](./)
+    - English: [Home EN](../en/)
+
+    ## Parcours rapide
+
+    1. Lire les pre-requis
+    2. Recuperer ses identifiants de diffusion (serveur RTMP + passphrase unique)
+    3. Configurer OBS
+    4. Lancer son stream
+    5. Consulter le troubleshooting en cas de probleme
+
+    ## Ce que vous trouverez ici
+
+    - Un guide de configuration sans valeur arbitraire: vous appliquez uniquement les valeurs validees par votre equipe technique.
+    - Des checklists pre-live, live et post-live.
+    - Une methode de diagnostic en cas d'echec de connexion, freeze, perte audio ou desynchronisation.
+    - Une methode d'escalade avec les bons elements a fournir (logs, symptomes, horodatage).
+
+    ## Navigation
+
+    - [Guides de configuration](guides)
+    - [Pre-requis](guides/pre-requis)
+    - [Identifiants de diffusion](guides/identifiants-diffusion)
+    - [Configurer OBS](guides/configurer-obs)
+    - [Lancer son stream](guides/lancer-le-live)
+    - [Troubleshooting](troubleshooting)
+
+    ## Notes importantes
+
+    - Ne jamais partager sa passphrase de diffusion.
+    - Une passphrase est unique par streamer.
+    - En cas de rotation de passphrase, mettre a jour OBS immediatement.
+    - Toujours tester avant un direct public, meme pour un changement mineur.
+
+    ## Demarrage rapide (5 minutes)
+
+    1. Verifier internet + audio + scene principale.
+    2. Configurer `Server` et `Stream Key` dans OBS.
+    3. Lancer un test prive de 60 a 120 secondes.
+    4. Verifier les stats OBS (debit stable, zero erreurs critiques).
+    5. Demarrer le live.
+
+guides-home:
+  body: |
+    # Guides de configuration
+
+    Parcours recommande:
+
+    1. [Pre-requis](pre-requis)
+    2. [Identifiants de diffusion](identifiants-diffusion)
+    3. [Configurer OBS](configurer-obs)
+    4. [Lancer son stream](lancer-le-live)
+
+    ## Logique du parcours
+
+    - Les pre-requis limitent les risques techniques avant configuration.
+    - Les identifiants valident l'authentification au serveur RTMP.
+    - La configuration OBS stabilise qualite et performance.
+    - Le guide de lancement encadre le direct et la gestion d'incident.
+
+    ## Conseil de maintenance
+
+    Apres un live stable, sauvegarder votre profil OBS de reference et ne modifier les reglages qu'hors direct.
+
+    [Retour a l'accueil](../)
+
+prerequisites:
+  body: |
+    # Pre-requis
+
+    Avant de commencer la configuration OBS, verifier les points suivants.
+
+    ## Materiel et connexion
+
+    - Connexion internet stable (idealement ethernet)
+    - Debit montant suffisant pour le bitrate cible
+    - Micro fonctionnel
+    - Casque recommande pour eviter le larsen
+
+    ### Conseils pratiques
+
+    - Eviter le Wi-Fi si possible pour reduire les pertes de paquets.
+    - Fermer les applications qui consomment fortement le reseau pendant le live.
+    - Verifier la temperature machine si vous streamez depuis un laptop (risque de throttling).
+
+    ## Logiciels
+
+    - OBS Studio installe (version recente)
+    - Pilotes audio/video a jour
+
+    ### Hygiene logicielle
+
+    - Redemarrer la machine avant un direct important.
+    - Eviter les mises a jour systeme juste avant un live.
+    - Conserver une version OBS stable pour tous les streamers (coherence support).
+
+    ## Informations necessaires
+
+    - URL du serveur RTMP
+    - Passphrase unique fournie pour votre compte streamer
+    - Parametres recommandes par Fluff Radio (bitrate, resolution, fps)
+
+    ### A valider avec l'equipe technique
+
+    - Limite maximale de bitrate autorisee.
+    - Profils encodeur recommandes selon type de machine.
+    - Exigences audio (frequence, canaux, niveau cible).
+
+    ## Verification rapide
+
+    1. Ouvrir OBS
+    2. Verifier que la scene principale est prete
+    3. Verifier que le micro capte du son
+    4. Verifier que les niveaux audio ne saturent pas
+
+    ## Check-list pre-live detaillee
+
+    1. Scene de secours preparee (ex: "pause" ou "probleme technique").
+    2. Source micro nommee clairement et testee.
+    3. Sources capture jeu/ecran verrouillees pour eviter un clic accidentel.
+    4. Monitoring audio actif pour verifier souffle, clipping ou bruit de fond.
+    5. Texte/titres sensibles verifies (pas d'infos privees).
+    6. Test de coupure/reprise internet connu (procedure d'urgence).
+
+    [Retour a l'accueil](../)
+
+credentials:
+  body: |
+    # Identifiants de diffusion
+
+    Chaque streamer dispose d'un couple:
+
+    - Serveur RTMP
+    - Passphrase unique
+
+    ## Format attendu
+
+    - Serveur: `rtmp://votre-serveur/live`
+    - Cle/passphrase: valeur secrete unique par streamer
+
+    ## Difference entre stream key et passphrase
+
+    - Dans OBS, le champ est souvent nomme `Stream Key`.
+    - Dans votre organisation, cette valeur peut etre geree comme une passphrase unique.
+    - Fonctionnellement, c'est la credentielle qui autorise la publication du flux.
+
+    ## Bonnes pratiques de securite
+
+    - Ne pas envoyer la passphrase en public ou en chat.
+    - Ne pas afficher la fenetre OBS avec la cle visible en stream.
+    - Stocker la passphrase dans un espace prive (gestionnaire de mots de passe recommande).
+    - En cas de doute, demander une rotation de passphrase.
+
+    ## Validation apres saisie dans OBS
+
+    1. Verifier l'URL serveur caractere par caractere.
+    2. Verifier l'absence d'espace au debut/fin de passphrase.
+    3. Lancer un test court hors antenne.
+    4. Confirmer cote supervision que le bon compte streamer est detecte.
+
+    ## Rotation d'une passphrase
+
+    1. Contacter l'equipe technique
+    2. Recevoir une nouvelle passphrase
+    3. Mettre a jour OBS
+    4. Tester une diffusion privee
+
+    ## Signaux d'alerte securite
+
+    - Connexions inattendues sur votre canal de diffusion.
+    - Echec de connexion apres un partage accidentel de capture.
+    - Utilisation de votre passphrase sur un poste non autorise.
+
+    Dans ces cas, demandez une rotation immediate et invalidez l'ancienne credentielle.
+
+    [Etape suivante: Configurer OBS](configurer-obs)
+
+configure-obs:
+  body: |
+    # Configurer OBS
+
+    Cette page explique la configuration minimale pour connecter OBS au serveur de diffusion.
+
+    Objectif: obtenir un flux stable, audible et synchronise, sans imposer de valeurs techniques non validees.
+
+    ## 1. Ouvrir les parametres de stream
+
+    Dans OBS:
+
+    1. Aller dans `Parametres`
+    2. Ouvrir l'onglet `Stream`
+    3. Choisir `Service: Custom...` (ou equivalent selon version)
+
+    ## 2. Entrer les informations de diffusion
+
+    - `Server`: URL RTMP fournie
+    - `Stream Key` / `Cle`: passphrase unique fournie
+
+    ### Bonnes pratiques de saisie
+
+    - Utiliser copier/coller depuis une source fiable.
+    - Eviter les espaces ou retours a la ligne caches.
+    - Re-valider apres toute rotation de passphrase.
+
+    ## 3. Parametres de sortie recommandes (base)
+
+    - Encodeur: materiel si disponible (NVENC/AMF/QuickSync), sinon x264
+    - Bitrate video: valeur fournie par l'equipe technique
+    - Audio: AAC 128 ou 160 kbps
+    - Intervalle d'image cle (keyframe): 2 secondes
+
+    ### Pourquoi ces parametres comptent
+
+    - Encodeur: impacte charge machine et qualite percue.
+    - Bitrate: trop haut = instabilite reseau; trop bas = artefacts visuels.
+    - Audio: un son propre est souvent percu comme plus important que l'image.
+    - Keyframe: indispensable pour compatibilite et recuperation apres pertes reseau.
+
+    ### Controles a faire
+
+    1. Surveiller l'usage CPU/GPU pendant un test.
+    2. Verifier l'absence de messages d'encodage surcharge.
+    3. Verifier la lisibilite de la scene dans un lecteur de controle.
+
+    ## 4. Parametres video recommandes (base)
+
+    - Resolution de base: selon votre scene
+    - Resolution de sortie: 1920x1080 ou 1280x720 selon contraintes
+    - FPS: 30 (ou 60 si valide par l'equipe)
+
+    ### Strategie de stabilite
+
+    - Prioriser la stabilite plutot que la performance maximale.
+    - Si des pertes apparaissent, reduire d'abord FPS ou resolution de sortie.
+    - Changer un seul parametre a la fois pour isoler l'effet.
+
+    ## 5. Test avant direct
+
+    1. Lancer un test hors antenne
+    2. Verifier la stabilite du bitrate
+    3. Verifier la synchro audio/video
+    4. Verifier le retour son
+
+    ## 6. Methodes de verification conseillees
+
+    1. Test court (60-120 s): valide connexion et credentials.
+    2. Test long (10-15 min): detecte chauffe, saturation, pertes intermittentes.
+    3. Relecture d'enregistrement local (si active): controle qualite percue.
+    4. Validation croisee: une autre personne confirme son/image en reception.
+
+    ## 7. Erreurs frequentes a eviter
+
+    - Changer plusieurs reglages juste avant de partir en direct.
+    - Oublier de sauvegarder un profil OBS stable.
+    - Lancer le live sans verifier les niveaux micro.
+    - Reutiliser une passphrase d'un autre compte streamer.
+
+    ## 8. Quand escalader vers le support
+
+    Escalader si:
+
+    - Les echecs de connexion persistent apres verification URL + passphrase.
+    - Les pertes reseau sont recurrentes sur plusieurs tests.
+    - L'encodage sature meme avec une configuration allegee.
+
+    Fournir:
+
+    1. Horodatage du test
+    2. Capture des reglages stream/sortie/audio
+    3. Log OBS exporte
+    4. Description courte du symptome observe
+
+    [Etape suivante: Lancer son stream](lancer-le-live)
+
+go-live:
+  body: |
+    # Lancer son stream
+
+    ## Check-list avant lancement
+
+    - Scenes OBS pretes
+    - Audio micro et audio desktop verifies
+    - URL RTMP et passphrase correctement renseignees
+    - Connexion internet stable
+
+    ### Verifications de derniere minute
+
+    - Verifier que la bonne scene est en `Preview` (si mode Studio).
+    - Verifier que les alertes/overlays critiques sont actifs.
+    - Verifier que le micro principal n'est pas mute hardware.
+    - Verifier qu'aucune fenetre privee ne peut etre capturee accidentellement.
+
+    ## Lancement
+
+    1. Ouvrir OBS
+    2. Charger la scene du direct
+    3. Cliquer sur `Demarrer le stream`
+    4. Verifier le retour du serveur (pas d'erreur)
+
+    ## Pendant le live
+
+    - Surveiller les `Stats` OBS (images perdues, debit)
+    - Garder un oeil sur les niveaux audio
+    - Eviter les changements techniques majeurs pendant une sequence sensible
+
+    ### Signaux a surveiller en priorite
+
+    - Chute brutale du debit effectif
+    - Erreurs reseau qui se repetent
+    - Pics CPU/GPU persistants
+    - Decalage audio progressivement visible
+
+    ## Reactions rapides en incident live
+
+    1. Basculer vers une scene de secours si necessaire.
+    2. Reduire un cran de complexite (resolution/FPS/charge scene).
+    3. Informer l'audience de la situation en restant clair.
+    4. Noter l'heure exacte de l'incident pour faciliter l'analyse apres live.
+
+    ## Fin de live
+
+    1. Cliquer sur `Arreter le stream`
+    2. Sauvegarder les modifications de scene si necessaire
+    3. Signaler tout incident technique pour suivi
+
+    ## Post-live technique recommande
+
+    1. Noter ce qui a bien/mal fonctionne.
+    2. Sauvegarder un profil OBS stable de reference.
+    3. Archiver les logs en cas d'incident.
+    4. Planifier les corrections hors plage de direct.
+
+    [Voir le troubleshooting](../troubleshooting)
+
+troubleshooting-home:
+  body: |
+    # Troubleshooting
+
+    Si le stream ne part pas ou si la qualite est mauvaise, commencer ici.
+
+    Methode recommandee:
+
+    1. Isoler le symptome principal
+    2. Verifier les causes les plus probables
+    3. Appliquer une correction unique
+    4. Re-tester avant de changer autre chose
+
+    ## Problemes courants
+
+    - [OBS n'arrive pas a se connecter au serveur](problemes-courants#obs-narrive-pas-a-se-connecter-au-serveur)
+    - [Le stream freeze ou saccade](problemes-courants#le-stream-freeze-ou-saccade)
+    - [Pas de son micro](problemes-courants#pas-de-son-micro)
+    - [Audio desynchronise](problemes-courants#audio-desynchronise)
+
+    ## Bonnes pratiques de diagnostic
+
+    - Ne modifier qu'un parametre a la fois.
+    - Noter heure, action appliquee et resultat.
+    - Garder des captures des reglages avant/apres.
+
+    ## Escalade
+
+    Si le probleme persiste apres verification:
+
+    1. Faire une capture d'ecran des parametres OBS stream/sortie/audio/video
+    2. Exporter les logs OBS
+    3. Contacter l'equipe technique avec heure et symptomes
+
+    ## Qualite minimale pour reprise live
+
+    - Connexion stable au serveur
+    - Audio intelligible sans saturation
+    - Flux video fluide sans freeze recurrent
+
+    [Ouvrir la page problemes courants](problemes-courants)
+
+common-issues:
+  body: |
+    # Problemes courants
+
+    ## OBS n'arrive pas a se connecter au serveur
+
+    Verifier:
+
+    - URL RTMP correcte
+    - Passphrase correcte (pas d'espace en trop)
+    - Connexion internet operationnelle
+    - Pare-feu/antivirus qui bloque OBS
+
+    Diagnostic complementaire:
+
+    - Verifier que le serveur RTMP cible est bien celui attendu (prod/test).
+    - Verifier que la passphrase n'a pas ete regeneree entre-temps.
+    - Verifier que l'heure systeme est correcte.
+
+    Actions:
+
+    1. Copier-coller a nouveau URL + passphrase
+    2. Redemarrer OBS
+    3. Tester depuis un autre reseau si possible
+    4. Demander verification cote serveur (authentification et tentative de connexion)
+
+    ## Le stream freeze ou saccade
+
+    Verifier:
+
+    - Bitrate trop eleve pour votre upload
+    - CPU/GPU satures
+    - Images perdues reseau dans les stats OBS
+
+    Diagnostic complementaire:
+
+    - Verifier si la saturation est continue ou par pics.
+    - Comparer comportement en scene simple vs scene lourde.
+    - Verifier si les freezes coincident avec alertes, transitions ou captures navigateur.
+
+    Actions:
+
+    1. Baisser la resolution de sortie
+    2. Baisser le bitrate
+    3. Passer en 30 FPS
+    4. Fermer les applications lourdes
+    5. Simplifier temporairement overlays/filtres pour isoler la cause
+
+    ## Pas de son micro
+
+    Verifier:
+
+    - Bonne source micro selectionnee
+    - Mute desactive
+    - Gain correct
+    - Permissions OS micro autorisees
+
+    Diagnostic complementaire:
+
+    - Verifier si le micro fonctionne dans une autre application.
+    - Verifier qu'aucune interface audio externe n'a change de profil.
+    - Verifier le monitoring pour detecter un bruit mais niveau trop faible.
+
+    Actions:
+
+    1. Re-selectionner le peripherique micro
+    2. Tester le micro hors OBS
+    3. Relancer OBS
+    4. Re-creer la source micro si la source semble corrompue
+
+    ## Audio desynchronise
+
+    Verifier:
+
+    - Delai audio configure par erreur
+    - Charge machine trop elevee
+
+    Diagnostic complementaire:
+
+    - Verifier si le decalage est constant ou augmente dans le temps.
+    - Comparer sortie live et enregistrement local.
+    - Verifier la presence de traitements audio lourds en temps reel.
+
+    Actions:
+
+    1. Remettre les delais audio a zero
+    2. Reduire la charge encodage
+    3. Refaire un test court avant reprise live
+
+    ## Collecte de logs utile pour support
+
+    1. Exporter le log OBS du test en echec.
+    2. Noter l'heure exacte des symptomes.
+    3. Joindre captures des onglets `Stream`, `Sortie`, `Audio`, `Video`.
+    4. Decrire ce qui a deja ete tente pour eviter les repetitions.
+
+    [Retour au troubleshooting](./)
+

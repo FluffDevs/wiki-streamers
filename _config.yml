@@ -4,5 +4,11 @@ plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 
 title: Wiki Fluff Radio
-description: Documentation and setup guides for stream animators
+description: Documentation et guides de configuration OBS pour les streamers
+lang: fr
+default_lang: fr
+languages:
+  - fr
+  - en
+permalink: pretty
 show_downloads: false

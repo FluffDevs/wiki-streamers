@@ -1,0 +1,475 @@
+home:
+  body: |
+    # Fluff Radio Streamer Wiki
+
+    This wiki explains how to configure OBS to publish to the Fluff Radio broadcast server.
+
+    Goal: give streamers a reliable, repeatable and secure workflow to go live.
+
+    ## Language versions
+
+    - English: [Home EN](./)
+    - Francais: [Accueil FR](../fr/)
+
+    ## Quick path
+
+    1. Read prerequisites
+    2. Get your broadcast credentials (RTMP server + unique passphrase)
+    3. Configure OBS
+    4. Start your stream
+    5. Use troubleshooting when issues appear
+
+    ## What you will find here
+
+    - A setup guide without arbitrary values: use only team-approved technical settings.
+    - Pre-live, in-live and post-live checklists.
+    - A diagnosis method for connection failures, freezes, audio loss and sync drift.
+    - An escalation method with the right evidence (logs, symptoms, timestamps).
+
+    ## Navigation
+
+    - [Configuration Guides](guides)
+    - [Prerequisites](guides/prerequisites)
+    - [Broadcast Credentials](guides/stream-credentials)
+    - [Configure OBS](guides/configure-obs)
+    - [Go Live](guides/go-live)
+    - [Troubleshooting](troubleshooting)
+
+    ## Important notes
+
+    - Never share your broadcast passphrase.
+    - A passphrase is unique per streamer.
+    - After passphrase rotation, update OBS immediately.
+    - Always run a short private test before any public live.
+
+guides-home:
+  body: |
+    # Configuration Guides
+
+    Recommended path:
+
+    1. [Prerequisites](prerequisites)
+    2. [Broadcast Credentials](stream-credentials)
+    3. [Configure OBS](configure-obs)
+    4. [Go Live](go-live)
+
+    ## Why this order works
+
+    - Prerequisites reduce technical risk before setup.
+    - Credentials ensure RTMP authentication is valid.
+    - OBS setup aligns quality and stability.
+    - Go-live steps cover live operations and incident handling.
+
+    ## Maintenance tip
+
+    After a stable live, save a known-good OBS profile and only change settings outside live hours.
+
+    [Back to home](../)
+
+prerequisites:
+  body: |
+    # Prerequisites
+
+    Before configuring OBS, validate the following points.
+
+    ## Hardware and connectivity
+
+    - Stable internet connection (ethernet preferred)
+    - Enough upload bandwidth for your target bitrate
+    - Working microphone
+    - Headphones recommended to avoid feedback loops
+
+    ### Practical guidance
+
+    - Avoid Wi-Fi when possible to reduce packet loss.
+    - Close network-heavy apps during live sessions.
+    - Monitor machine thermals on laptops to avoid throttling.
+
+    ## Software
+
+    - OBS Studio installed (recent stable version)
+    - Up-to-date audio and video drivers
+
+    ### Software hygiene
+
+    - Reboot before an important show.
+    - Avoid system updates right before going live.
+    - Keep a common stable OBS version across streamers for easier support.
+
+    ## Required information
+
+    - RTMP server URL
+    - Unique passphrase for your streamer account
+    - Team-approved output settings (bitrate, resolution, fps)
+
+    ### Confirm with the technical team
+
+    - Maximum allowed bitrate
+    - Recommended encoder profiles per hardware type
+    - Audio requirements (sample rate, channels, target levels)
+
+    ## Fast validation
+
+    1. Open OBS
+    2. Confirm your main scene is ready
+    3. Confirm your microphone captures signal
+    4. Confirm audio meters are not clipping
+
+    ## Detailed pre-live checklist
+
+    1. Backup scene ready (for example "pause" or "technical issue").
+    2. Microphone source clearly named and tested.
+    3. Capture sources locked to prevent accidental changes.
+    4. Audio monitoring active to catch noise, hum, or clipping.
+    5. Sensitive overlays/text checked (no private data).
+    6. Emergency reconnection procedure known by the streamer.
+
+    [Back to home](../)
+
+credentials:
+  body: |
+    # Broadcast Credentials
+
+    Each streamer uses a pair:
+
+    - RTMP server endpoint
+    - Unique passphrase
+
+    ## Expected format
+
+    - Server: `rtmp://your-server/live`
+    - Key/passphrase: unique secret per streamer account
+
+    ## Stream key vs passphrase
+
+    - OBS usually labels this field as `Stream Key`.
+    - In your organization, the same value can be managed as a unique passphrase.
+    - Functionally, this credential authorizes publishing to the broadcast server.
+
+    ## Security best practices
+
+    - Never share the passphrase in public channels.
+    - Never show the full key in live screen captures.
+    - Store credentials in a private and trusted location.
+    - Request rotation immediately if exposure is suspected.
+
+    ## Validation after entering credentials
+
+    1. Verify RTMP URL character by character.
+    2. Verify no leading/trailing spaces in the passphrase.
+    3. Run a short private stream test.
+    4. Confirm that monitoring sees the expected streamer identity.
+
+    ## Passphrase rotation
+
+    1. Contact technical support
+    2. Receive a new passphrase
+    3. Update OBS immediately
+    4. Run a private validation stream
+
+    ## Security warning signs
+
+    - Unexpected stream sessions on your channel.
+    - Repeated auth errors after accidental credential exposure.
+    - Credential usage from unauthorized machines.
+
+    In those cases, request immediate rotation and revoke the old credential.
+
+    [Next step: Configure OBS](configure-obs)
+
+configure-obs:
+  body: |
+    # Configure OBS
+
+    This page covers the minimum configuration to connect OBS to the broadcast server.
+
+    Goal: produce a stable, audible and synchronized stream without inventing non-approved technical values.
+
+    ## 1. Open stream settings
+
+    In OBS:
+
+    1. Open `Settings`
+    2. Open the `Stream` tab
+    3. Choose `Service: Custom...` (or equivalent for your OBS version)
+
+    ## 2. Enter broadcast credentials
+
+    - `Server`: provided RTMP URL
+    - `Stream Key`: your unique passphrase
+
+    ### Input best practices
+
+    - Copy/paste from a trusted source.
+    - Avoid hidden spaces or line breaks.
+    - Re-validate after any passphrase rotation.
+
+    ## 3. Output settings baseline
+
+    - Encoder: hardware encoder if available (NVENC/AMF/QuickSync), otherwise x264
+    - Video bitrate: technical team approved value
+    - Audio: AAC at team approved bitrate
+    - Keyframe interval: 2 seconds
+
+    ### Why these settings matter
+
+    - Encoder choice affects system load and quality consistency.
+    - Bitrate too high causes network instability; too low causes artifacts.
+    - Audio quality heavily impacts perceived broadcast quality.
+    - Keyframe interval impacts compatibility and recovery after packet loss.
+
+    ### Checks to run
+
+    1. Observe CPU/GPU usage during a test.
+    2. Confirm there are no encoder overload warnings.
+    3. Confirm scene readability in a monitoring player.
+
+    ## 4. Video settings baseline
+
+    - Base canvas: aligned with your scene composition
+    - Output resolution: team-approved target for your setup
+    - FPS: 30 by default, 60 only if validated by your team
+
+    ### Stability strategy
+
+    - Prioritize stability over maximum performance.
+    - If drops appear, reduce FPS or output resolution first.
+    - Change one setting at a time to isolate impact.
+
+    ## 5. Pre-live validation
+
+    1. Start a private/off-air test
+    2. Check bitrate stability
+    3. Check audio/video sync
+    4. Check audio return quality
+
+    ## 6. Recommended verification methods
+
+    1. Short test (60-120s): validates connection and credentials.
+    2. Longer test (10-15 min): reveals heat/load/intermittent issues.
+    3. Local recording review (if enabled): validates perceived quality.
+    4. Cross-check: second person confirms reception quality.
+
+    ## 7. Common mistakes to avoid
+
+    - Changing multiple settings right before live.
+    - Forgetting to save a known-good OBS profile.
+    - Going live without checking microphone levels.
+    - Using credentials from another streamer account.
+
+    ## 8. When to escalate to support
+
+    Escalate if:
+
+    - Connection failures persist after URL/key verification.
+    - Network drops are repeatable across tests.
+    - Encoder overload remains even after lowering complexity.
+
+    Provide:
+
+    1. Test timestamp
+    2. Screenshots of stream/output/audio/video settings
+    3. Exported OBS log
+    4. Short symptom description
+
+    [Next step: Go Live](go-live)
+
+go-live:
+  body: |
+    # Go Live
+
+    ## Pre-launch checklist
+
+    - OBS scenes ready
+    - Microphone and desktop audio verified
+    - RTMP URL and passphrase entered correctly
+    - Stable internet connection
+
+    ### Last-minute checks
+
+    - Confirm the correct scene is in preview (Studio Mode).
+    - Confirm critical overlays/alerts are active.
+    - Confirm microphone hardware mute is off.
+    - Confirm no private windows can be captured accidentally.
+
+    ## Start sequence
+
+    1. Open OBS
+    2. Load your live scene
+    3. Click `Start Streaming`
+    4. Confirm no server-side error is reported
+
+    ## During live
+
+    - Monitor OBS `Stats` (dropped frames, bitrate)
+    - Monitor audio levels continuously
+    - Avoid major technical changes during sensitive segments
+
+    ### Priority warning signs
+
+    - Sudden effective bitrate drops
+    - Repeating network errors
+    - Persistent CPU/GPU spikes
+    - Increasing audio delay over time
+
+    ## Fast incident response
+
+    1. Switch to a fallback scene if needed.
+    2. Lower one complexity factor (scene load, FPS, output scale).
+    3. Inform your audience clearly and briefly.
+    4. Record exact incident time for post-live analysis.
+
+    ## End of stream
+
+    1. Click `Stop Streaming`
+    2. Save scene changes if needed
+    3. Report technical incidents for follow-up
+
+    ## Recommended post-live technical review
+
+    1. Note what worked and what failed.
+    2. Save a stable reference OBS profile.
+    3. Archive logs if incidents occurred.
+    4. Plan fixes outside live windows.
+
+    [Open troubleshooting](../troubleshooting)
+
+troubleshooting-home:
+  body: |
+    # Troubleshooting
+
+    If the stream fails to start or quality drops, begin here.
+
+    Recommended method:
+
+    1. Isolate the main symptom
+    2. Check the most likely causes first
+    3. Apply one correction
+    4. Re-test before changing anything else
+
+    ## Common issues
+
+    - [OBS cannot connect to the server](common-issues#obs-cannot-connect-to-the-server)
+    - [Stream freezes or stutters](common-issues#stream-freezes-or-stutters)
+    - [No microphone audio](common-issues#no-microphone-audio)
+    - [Audio out of sync](common-issues#audio-out-of-sync)
+
+    ## Diagnostic best practices
+
+    - Change one parameter at a time.
+    - Record timestamp, action, and outcome.
+    - Keep before/after screenshots of key settings.
+
+    ## Escalation
+
+    If the issue remains after checks:
+
+    1. Capture screenshots of OBS stream/output/audio/video settings
+    2. Export OBS logs
+    3. Contact technical support with timestamp and symptom summary
+
+    ## Minimum quality gate before going live again
+
+    - Stable server connection
+    - Intelligible audio with no clipping
+    - Smooth video without recurring freeze events
+
+    [Open common issues page](common-issues)
+
+common-issues:
+  body: |
+    # Common Issues
+
+    ## OBS cannot connect to the server
+
+    Check:
+
+    - Correct RTMP URL
+    - Correct passphrase (no extra spaces)
+    - Working internet connection
+    - Firewall/antivirus not blocking OBS
+
+    Additional diagnostics:
+
+    - Confirm the target RTMP environment is correct (production vs test).
+    - Confirm the passphrase has not been rotated recently.
+    - Confirm system clock is correct.
+
+    Actions:
+
+    1. Re-paste URL and passphrase
+    2. Restart OBS
+    3. Test from another network if possible
+    4. Ask server-side verification for auth and connection attempts
+
+    ## Stream freezes or stutters
+
+    Check:
+
+    - Bitrate too high for upload bandwidth
+    - CPU/GPU saturation
+    - Network dropped frames in OBS stats
+
+    Additional diagnostics:
+
+    - Determine if saturation is constant or burst-based.
+    - Compare behavior with light vs heavy scenes.
+    - Check if freeze events match alerts/transitions/browser sources.
+
+    Actions:
+
+    1. Lower output resolution
+    2. Lower bitrate
+    3. Switch to 30 FPS
+    4. Close heavy background apps
+    5. Temporarily simplify overlays/filters
+
+    ## No microphone audio
+
+    Check:
+
+    - Correct microphone source selected
+    - Mute disabled
+    - Proper gain
+    - OS microphone permissions granted
+
+    Additional diagnostics:
+
+    - Test microphone in another application.
+    - Confirm audio interface profile did not change.
+    - Use monitoring to detect low-level noise with weak gain.
+
+    Actions:
+
+    1. Re-select microphone device
+    2. Test microphone outside OBS
+    3. Restart OBS
+    4. Recreate microphone source if corrupted
+
+    ## Audio out of sync
+
+    Check:
+
+    - Incorrect audio sync offset
+    - System load too high
+
+    Additional diagnostics:
+
+    - Determine whether the delay is fixed or increasing.
+    - Compare live output with local recording.
+    - Check for heavy real-time audio processing.
+
+    Actions:
+
+    1. Reset audio offsets
+    2. Reduce encoding load
+    3. Run a short validation test before resuming live
+
+    ## Useful logs for support
+
+    1. Export OBS log from a failing session.
+    2. Note exact symptom timestamps.
+    3. Attach screenshots of `Stream`, `Output`, `Audio`, `Video` settings.
+    4. List attempted fixes to avoid repeated steps.
+
+    [Back to troubleshooting](./)

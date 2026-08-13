@@ -1,0 +1,17 @@
+{% assign translations = site.pages | where: "ref", page.ref %}
+{% if translations.size > 1 %}
+<div class="lang-switcher" style="margin: 0 0 1rem 0; font-size: 0.95rem;">
+  <strong>{% include t.html key="switcher_language" %}:</strong>
+  {% for code in site.languages %}
+    {% assign p = translations | where: "lang", code | first %}
+    {% if p %}
+    {% if p.lang == page.lang %}
+      <span>{{ site.data.i18n[p.lang].language_name }}</span>
+    {% else %}
+      <a href="{{ p.url | relative_url }}">{{ site.data.i18n[p.lang].language_name }}</a>
+    {% endif %}
+    {% unless forloop.last %} | {% endunless %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

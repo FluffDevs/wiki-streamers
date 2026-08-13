@@ -1,50 +1,100 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+# CI/CD workflow for validating then deploying a Jekyll site to GitHub Pages
+name: CI and Deploy Jekyll Site
 
 on:
-  # Runs on pushes targeting the default branch
+  # Run CI on main pushes
   push:
     branches: ["main"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Run CI on pull requests targeting main
+  pull_request:
+    branches: ["main"]
+
+  # Allow manual runs from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Minimal default permissions; deploy job elevates as needed
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Only one Pages workflow at a time
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
-  build:
+  # 1) CI validation build and checks (must pass before any deploy build)
+  test-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Build with Jekyll
+
+      - name: Build test site with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+
+          destination: ./_site_test
+
+      - name: Validate generated routes and i18n output
+        run: |
+          set -euo pipefail
+
+          # Expected language entrypoints
+          test -f ./_site_test/fr/index.html
+          test -f ./_site_test/en/index.html
+
+          # Expected key pages
+          test -f ./_site_test/fr/guides/index.html
+          test -f ./_site_test/en/guides/index.html
+          test -f ./_site_test/fr/troubleshooting/index.html
+          test -f ./_site_test/en/troubleshooting/index.html
+
+          # Fail if renderer fallback warning appears in built output
+          if grep -R "Missing i18n content for ref" -n ./_site_test; then
+            echo "i18n content is missing for at least one page ref"
+            exit 1
+          fi
+
+  # 2) Rebuild for deployment (only after test-build passes)
+  build:
+    needs: test-build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build production site with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
 
-  # Deployment job
+  # 3) Deploy to GitHub Pages
   deploy:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
