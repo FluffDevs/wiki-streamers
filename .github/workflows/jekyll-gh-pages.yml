@@ -60,6 +60,35 @@ jobs:
             exit 1
           fi
 
+          # Validate internal FR/EN links resolve to generated files
+          mapfile -t links < <(
+            grep -RhoE 'href="/(fr|en)/[^"#?]*([?#][^"]*)?"' ./_site_test/fr ./_site_test/en \
+              | sed -E 's/^href="([^"]*)"$/\1/' \
+              | sort -u || true
+          )
+
+          broken=0
+          for link in "${links[@]}"; do
+            clean="${link%%\#*}"
+            clean="${clean%%\?*}"
+
+            if [[ "$clean" == */ ]]; then
+              target="./_site_test${clean}index.html"
+            else
+              target="./_site_test${clean}"
+            fi
+
+            if [[ ! -f "$target" && ! -f "${target}.html" ]]; then
+              echo "Broken internal link: $link -> $target"
+              broken=1
+            fi
+          done
+
+          if [[ "$broken" -ne 0 ]]; then
+            echo "One or more internal links are broken in generated FR/EN pages"
+            exit 1
+          fi
+
   # 2) Rebuild for deployment (only after test-build passes)
   build:
     needs: test-build

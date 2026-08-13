@@ -8,8 +8,8 @@ home:
 
     ## Language versions
 
-    - English: [Home EN](./)
-    - Francais: [Accueil FR](../fr/)
+    - English: [Home EN](/en/)
+    - Francais: [Accueil FR](/fr/)
 
     ## Quick path
 
@@ -28,12 +28,12 @@ home:
 
     ## Navigation
 
-    - [Configuration Guides](guides)
-    - [Prerequisites](guides/prerequisites)
-    - [Broadcast Credentials](guides/stream-credentials)
-    - [Configure OBS](guides/configure-obs)
-    - [Go Live](guides/go-live)
-    - [Troubleshooting](troubleshooting)
+    - [Configuration Guides](/en/guides/)
+    - [Prerequisites](/en/guides/prerequisites/)
+    - [Broadcast Credentials](/en/guides/stream-credentials/)
+    - [Configure OBS](/en/guides/configure-obs/)
+    - [Go Live](/en/guides/go-live/)
+    - [Troubleshooting](/en/troubleshooting/)
 
     ## Important notes
 
@@ -48,10 +48,10 @@ guides-home:
 
     Recommended path:
 
-    1. [Prerequisites](prerequisites)
-    2. [Broadcast Credentials](stream-credentials)
-    3. [Configure OBS](configure-obs)
-    4. [Go Live](go-live)
+    1. [Prerequisites](/en/guides/prerequisites/)
+    2. [Broadcast Credentials](/en/guides/stream-credentials/)
+    3. [Configure OBS](/en/guides/configure-obs/)
+    4. [Go Live](/en/guides/go-live/)
 
     ## Why this order works
 
@@ -64,7 +64,7 @@ guides-home:
 
     After a stable live, save a known-good OBS profile and only change settings outside live hours.
 
-    [Back to home](../)
+    [Back to home](/en/)
 
 prerequisites:
   body: |
@@ -124,7 +124,7 @@ prerequisites:
     5. Sensitive overlays/text checked (no private data).
     6. Emergency reconnection procedure known by the streamer.
 
-    [Back to home](../)
+    [Back to home](/en/)
 
 credentials:
   body: |
@@ -175,7 +175,7 @@ credentials:
 
     In those cases, request immediate rotation and revoke the old credential.
 
-    [Next step: Configure OBS](configure-obs)
+    [Next step: Configure OBS](/en/guides/configure-obs/)
 
 configure-obs:
   body: |
@@ -272,7 +272,7 @@ configure-obs:
     3. Exported OBS log
     4. Short symptom description
 
-    [Next step: Go Live](go-live)
+    [Next step: Go Live](/en/guides/go-live/)
 
 go-live:
   body: |
@@ -332,7 +332,7 @@ go-live:
     3. Archive logs if incidents occurred.
     4. Plan fixes outside live windows.
 
-    [Open troubleshooting](../troubleshooting)
+    [Open troubleshooting](/en/troubleshooting/)
 
 troubleshooting-home:
   body: |
@@ -349,10 +349,10 @@ troubleshooting-home:
 
     ## Common issues
 
-    - [OBS cannot connect to the server](common-issues#obs-cannot-connect-to-the-server)
-    - [Stream freezes or stutters](common-issues#stream-freezes-or-stutters)
-    - [No microphone audio](common-issues#no-microphone-audio)
-    - [Audio out of sync](common-issues#audio-out-of-sync)
+    - [OBS cannot connect to the server](/en/troubleshooting/common-issues/#obs-cannot-connect-to-the-server)
+    - [Stream freezes or stutters](/en/troubleshooting/common-issues/#stream-freezes-or-stutters)
+    - [No microphone audio](/en/troubleshooting/common-issues/#no-microphone-audio)
+    - [Audio out of sync](/en/troubleshooting/common-issues/#audio-out-of-sync)
 
     ## Diagnostic best practices
 
@@ -374,7 +374,7 @@ troubleshooting-home:
     - Intelligible audio with no clipping
     - Smooth video without recurring freeze events
 
-    [Open common issues page](common-issues)
+    [Open common issues page](/en/troubleshooting/common-issues/)
 
 common-issues:
   body: |
@@ -472,4 +472,4 @@ common-issues:
     3. Attach screenshots of `Stream`, `Output`, `Audio`, `Video` settings.
     4. List attempted fixes to avoid repeated steps.
 
-    [Back to troubleshooting](./)
+    [Back to troubleshooting](/en/troubleshooting/)

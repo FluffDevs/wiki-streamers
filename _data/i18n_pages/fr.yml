@@ -8,8 +8,8 @@ home:
 
     ## Versions de langue
 
-    - Francais: [Accueil FR](./)
-    - English: [Home EN](../en/)
+    - Francais: [Accueil FR](/fr/)
+    - English: [Home EN](/en/)
 
     ## Parcours rapide
 
@@ -28,12 +28,12 @@ home:
 
     ## Navigation
 
-    - [Guides de configuration](guides)
-    - [Pre-requis](guides/pre-requis)
-    - [Identifiants de diffusion](guides/identifiants-diffusion)
-    - [Configurer OBS](guides/configurer-obs)
-    - [Lancer son stream](guides/lancer-le-live)
-    - [Troubleshooting](troubleshooting)
+    - [Guides de configuration](/fr/guides/)
+    - [Pre-requis](/fr/guides/pre-requis/)
+    - [Identifiants de diffusion](/fr/guides/identifiants-diffusion/)
+    - [Configurer OBS](/fr/guides/configurer-obs/)
+    - [Lancer son stream](/fr/guides/lancer-le-live/)
+    - [Troubleshooting](/fr/troubleshooting/)
 
     ## Notes importantes
 
@@ -56,10 +56,10 @@ guides-home:
 
     Parcours recommande:
 
-    1. [Pre-requis](pre-requis)
-    2. [Identifiants de diffusion](identifiants-diffusion)
-    3. [Configurer OBS](configurer-obs)
-    4. [Lancer son stream](lancer-le-live)
+    1. [Pre-requis](/fr/guides/pre-requis/)
+    2. [Identifiants de diffusion](/fr/guides/identifiants-diffusion/)
+    3. [Configurer OBS](/fr/guides/configurer-obs/)
+    4. [Lancer son stream](/fr/guides/lancer-le-live/)
 
     ## Logique du parcours
 
@@ -72,7 +72,7 @@ guides-home:
 
     Apres un live stable, sauvegarder votre profil OBS de reference et ne modifier les reglages qu'hors direct.
 
-    [Retour a l'accueil](../)
+    [Retour a l'accueil](/fr/)
 
 prerequisites:
   body: |
@@ -132,7 +132,7 @@ prerequisites:
     5. Texte/titres sensibles verifies (pas d'infos privees).
     6. Test de coupure/reprise internet connu (procedure d'urgence).
 
-    [Retour a l'accueil](../)
+    [Retour a l'accueil](/fr/)
 
 credentials:
   body: |
@@ -183,7 +183,7 @@ credentials:
 
     Dans ces cas, demandez une rotation immediate et invalidez l'ancienne credentielle.
 
-    [Etape suivante: Configurer OBS](configurer-obs)
+    [Etape suivante: Configurer OBS](/fr/guides/configurer-obs/)
 
 configure-obs:
   body: |
@@ -280,7 +280,7 @@ configure-obs:
     3. Log OBS exporte
     4. Description courte du symptome observe
 
-    [Etape suivante: Lancer son stream](lancer-le-live)
+    [Etape suivante: Lancer son stream](/fr/guides/lancer-le-live/)
 
 go-live:
   body: |
@@ -340,7 +340,7 @@ go-live:
     3. Archiver les logs en cas d'incident.
     4. Planifier les corrections hors plage de direct.
 
-    [Voir le troubleshooting](../troubleshooting)
+    [Voir le troubleshooting](/fr/troubleshooting/)
 
 troubleshooting-home:
   body: |
@@ -357,10 +357,10 @@ troubleshooting-home:
 
     ## Problemes courants
 
-    - [OBS n'arrive pas a se connecter au serveur](problemes-courants#obs-narrive-pas-a-se-connecter-au-serveur)
-    - [Le stream freeze ou saccade](problemes-courants#le-stream-freeze-ou-saccade)
-    - [Pas de son micro](problemes-courants#pas-de-son-micro)
-    - [Audio desynchronise](problemes-courants#audio-desynchronise)
+    - [OBS n'arrive pas a se connecter au serveur](/fr/troubleshooting/problemes-courants/#obs-narrive-pas-a-se-connecter-au-serveur)
+    - [Le stream freeze ou saccade](/fr/troubleshooting/problemes-courants/#le-stream-freeze-ou-saccade)
+    - [Pas de son micro](/fr/troubleshooting/problemes-courants/#pas-de-son-micro)
+    - [Audio desynchronise](/fr/troubleshooting/problemes-courants/#audio-desynchronise)
 
     ## Bonnes pratiques de diagnostic
 
@@ -382,7 +382,7 @@ troubleshooting-home:
     - Audio intelligible sans saturation
     - Flux video fluide sans freeze recurrent
 
-    [Ouvrir la page problemes courants](problemes-courants)
+    [Ouvrir la page problemes courants](/fr/troubleshooting/problemes-courants/)
 
 common-issues:
   body: |
@@ -480,5 +480,5 @@ common-issues:
     3. Joindre captures des onglets `Stream`, `Sortie`, `Audio`, `Video`.
     4. Decrire ce qui a deja ete tente pour eviter les repetitions.
 
-    [Retour au troubleshooting](./)
+    [Retour au troubleshooting](/fr/troubleshooting/)
 
