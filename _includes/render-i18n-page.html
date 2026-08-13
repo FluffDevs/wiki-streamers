@@ -5,7 +5,9 @@
   {% assign page_i18n = site.data.i18n_pages[site.default_lang][ref] %}
 {% endif %}
 {% if page_i18n %}
+{% include page-nav.html %}
 {{ page_i18n.body | markdownify }}
+{% include page-nav.html %}
 {% else %}
 <p>Missing i18n content for ref: {{ ref }} (lang: {{ lang }})</p>
 {% endif %}

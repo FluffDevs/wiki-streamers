@@ -1,0 +1,96 @@
+{% assign lang = page.lang | default: site.default_lang %}
+{% assign ref = page.ref | default: 'home' %}
+
+{% if lang == 'fr' %}
+  {% assign home_url = '/fr/' | relative_url %}
+  {% assign guides_url = '/fr/guides/' | relative_url %}
+  {% assign prerequisites_url = '/fr/guides/pre-requis/' | relative_url %}
+  {% assign credentials_url = '/fr/guides/identifiants-diffusion/' | relative_url %}
+  {% assign configure_obs_url = '/fr/guides/configurer-obs/' | relative_url %}
+  {% assign go_live_url = '/fr/guides/lancer-le-live/' | relative_url %}
+  {% assign troubleshooting_url = '/fr/troubleshooting/' | relative_url %}
+  {% assign common_issues_url = '/fr/troubleshooting/problemes-courants/' | relative_url %}
+{% else %}
+  {% assign home_url = '/en/' | relative_url %}
+  {% assign guides_url = '/en/guides/' | relative_url %}
+  {% assign prerequisites_url = '/en/guides/prerequisites/' | relative_url %}
+  {% assign credentials_url = '/en/guides/stream-credentials/' | relative_url %}
+  {% assign configure_obs_url = '/en/guides/configure-obs/' | relative_url %}
+  {% assign go_live_url = '/en/guides/go-live/' | relative_url %}
+  {% assign troubleshooting_url = '/en/troubleshooting/' | relative_url %}
+  {% assign common_issues_url = '/en/troubleshooting/common-issues/' | relative_url %}
+{% endif %}
+
+{% assign prev_url = '' %}
+{% assign prev_label_key = '' %}
+{% assign next_url = '' %}
+{% assign next_label_key = '' %}
+
+{% case ref %}
+  {% when 'home' %}
+    {% assign next_url = guides_url %}
+    {% assign next_label_key = 'nav_guides' %}
+  {% when 'guides-home' %}
+    {% assign prev_url = home_url %}
+    {% assign prev_label_key = 'nav_home' %}
+    {% assign next_url = prerequisites_url %}
+    {% assign next_label_key = 'nav_prerequisites' %}
+  {% when 'prerequisites' %}
+    {% assign prev_url = guides_url %}
+    {% assign prev_label_key = 'nav_guides' %}
+    {% assign next_url = credentials_url %}
+    {% assign next_label_key = 'nav_credentials' %}
+  {% when 'credentials' %}
+    {% assign prev_url = prerequisites_url %}
+    {% assign prev_label_key = 'nav_prerequisites' %}
+    {% assign next_url = configure_obs_url %}
+    {% assign next_label_key = 'nav_configure_obs' %}
+  {% when 'configure-obs' %}
+    {% assign prev_url = credentials_url %}
+    {% assign prev_label_key = 'nav_credentials' %}
+    {% assign next_url = go_live_url %}
+    {% assign next_label_key = 'nav_go_live' %}
+  {% when 'go-live' %}
+    {% assign prev_url = configure_obs_url %}
+    {% assign prev_label_key = 'nav_configure_obs' %}
+    {% assign next_url = troubleshooting_url %}
+    {% assign next_label_key = 'nav_troubleshooting' %}
+  {% when 'troubleshooting-home' %}
+    {% assign prev_url = go_live_url %}
+    {% assign prev_label_key = 'nav_go_live' %}
+    {% assign next_url = common_issues_url %}
+    {% assign next_label_key = 'nav_common_issues' %}
+  {% when 'common-issues' %}
+    {% assign prev_url = troubleshooting_url %}
+    {% assign prev_label_key = 'nav_troubleshooting' %}
+{% endcase %}
+
+<div class="page-nav" style="margin: 0 0 1rem 0; padding: 0.75rem 0.9rem; border: 1px solid #d7dbe3; border-radius: 8px;">
+  <div style="display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+    <nav aria-label="Breadcrumb" style="font-size: 0.95rem;">
+      <a href="{{ home_url }}">{% include t.html key='nav_home' %}</a>
+      {% if ref == 'guides-home' or ref == 'prerequisites' or ref == 'credentials' or ref == 'configure-obs' or ref == 'go-live' %}
+        &nbsp;&gt;&nbsp;<a href="{{ guides_url }}">{% include t.html key='nav_guides' %}</a>
+      {% endif %}
+      {% if ref == 'troubleshooting-home' or ref == 'common-issues' %}
+        &nbsp;&gt;&nbsp;<a href="{{ troubleshooting_url }}">{% include t.html key='nav_troubleshooting' %}</a>
+      {% endif %}
+      {% if ref != 'home' and ref != 'guides-home' and ref != 'troubleshooting-home' %}
+        &nbsp;&gt;&nbsp;<span>{{ page.title }}</span>
+      {% endif %}
+    </nav>
+
+    <a href="{{ home_url }}" style="white-space: nowrap;">{% include t.html key='nav_home' %}</a>
+  </div>
+
+  {% if prev_url != '' or next_url != '' %}
+  <div style="display: flex; gap: 0.75rem; margin-top: 0.7rem; flex-wrap: wrap;">
+    {% if prev_url != '' %}
+      <a href="{{ prev_url }}">&larr; {% include t.html key='nav_previous' %}: {% include t.html key=prev_label_key %}</a>
+    {% endif %}
+    {% if next_url != '' %}
+      <a href="{{ next_url }}">{% include t.html key='nav_next' %}: {% include t.html key=next_label_key %} &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
