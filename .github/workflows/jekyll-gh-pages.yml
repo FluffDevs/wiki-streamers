@@ -89,6 +89,22 @@ jobs:
             exit 1
           fi
 
+          # Ensure breadcrumb/navigation block is present on key pages
+          for page in \
+            ./_site_test/fr/index.html \
+            ./_site_test/fr/guides/index.html \
+            ./_site_test/fr/guides/pre-requis/index.html \
+            ./_site_test/fr/troubleshooting/index.html \
+            ./_site_test/en/index.html \
+            ./_site_test/en/guides/index.html \
+            ./_site_test/en/guides/prerequisites/index.html \
+            ./_site_test/en/troubleshooting/index.html; do
+            if ! grep -q 'class="page-nav"' "$page"; then
+              echo "Missing breadcrumb/navigation block in $page"
+              exit 1
+            fi
+          done
+
   # 2) Rebuild for deployment (only after test-build passes)
   build:
     needs: test-build
