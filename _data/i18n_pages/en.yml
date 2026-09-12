@@ -13,8 +13,8 @@ home:
 
     ## Quick path
 
-    1. Read prerequisites
-    2. Get your broadcast credentials (RTMP server + unique passphrase)
+    1. Read prerequisites (your SRT or RTMP mode)
+    2. Get your connection link from the panel
     3. Configure OBS
     4. Start your stream
     5. Use troubleshooting when issues appear
@@ -34,12 +34,13 @@ home:
     - [Configure OBS](/en/guides/configure-obs/)
     - [Go Live](/en/guides/go-live/)
     - [Troubleshooting](/en/troubleshooting/)
+    - [Admin Panel (staff)](/en/panel-admin/) — full guide to the `programmation.fluffradio.com` panel (media library, playlists, schedule, validation, streamers...)
 
     ## Important notes
 
-    - Never share your broadcast passphrase.
-    - A passphrase is unique per streamer.
-    - After passphrase rotation, update OBS immediately.
+    - Never share your broadcast credentials (secrets/passphrase).
+    - These credentials are unique per streamer and are retrieved exclusively from the panel.
+    - After a secrets regeneration by an administrator, update OBS immediately.
     - Always run a short private test before any public live.
 
 guides-home:
@@ -70,110 +71,91 @@ prerequisites:
   body: |
     # Prerequisites
 
-    Before configuring OBS, validate the following points.
+    Before anything else, two things to understand: your account's broadcast mode, and access to the admin panel (`programmation.fluffradio.com`). Everything else in this wiki follows from these.
+
+    ## The two broadcast modes
+
+    Fluff Radio supports two protocols. Your account is only authorized for one or more specific modes, configured by an administrator.
+
+    - **SRT** (default, recommended mode): the key thing to remember — **your connection link opens itself automatically, 10 minutes before your scheduled slot starts.** Nothing to start manually.
+    - **RTMP** (fallback mode, for software that can't do SRT): unlike SRT, nothing opens automatically. You must click "Demarrer / armer" ("Start / arm") in the panel yourself at the right moment.
+
+    Remember this simple rule:
+
+    > **SRT = automatic, 10 minutes before. RTMP = manual, you click it yourself.**
+
+    ## Accessing the panel
+
+    1. Open `programmation.fluffradio.com`.
+    2. Click "Se connecter" ("Log in"), enter your username and password.
+    3. Go to the "Streamers" menu (left sidebar). If you don't see it, your account doesn't have the right role yet — ask an administrator to add it.
+
+    ## Your animator profile
+
+    On the "Streamers" page, a "Ma fiche animateur" ("My animator profile") block is reserved for you. It shows your username, your allowed modes, your SRT encryption level, your end-of-live policy (see [Go Live](/en/guides/go-live/)), and whether you can broadcast outside your slot.
+
+    - If this block says no profile is linked to your account: ask an administrator to create one for you. Without it, you can't go live at all.
+    - If access is denied: your animator account exists but has been disabled. Contact an administrator.
 
     ## Hardware and connectivity
 
     - Stable internet connection (ethernet preferred)
-    - Enough upload bandwidth for your target bitrate
-    - Working microphone
-    - Headphones recommended to avoid feedback loops
+    - Working microphone, headphones recommended to avoid feedback loops
+    - OBS Studio (or equivalent software supporting RTMP and/or SRT depending on your mode), up to date
 
     ### Practical guidance
 
     - Avoid Wi-Fi when possible to reduce packet loss.
     - Close network-heavy apps during live sessions.
-    - Monitor machine thermals on laptops to avoid throttling.
+    - Reboot before an important show; avoid system updates right before going live.
 
-    ## Software
+    ## Fast validation before going live
 
-    - OBS Studio installed (recent stable version)
-    - Up-to-date audio and video drivers
+    1. Open OBS, confirm your main scene is ready.
+    2. Confirm your microphone captures signal without clipping.
+    3. Open the panel's "Streamers" page to check your mode and access.
+    4. If your slot is approaching (SRT), keep the page open: the link will appear on its own 10 minutes before.
 
-    ### Software hygiene
-
-    - Reboot before an important show.
-    - Avoid system updates right before going live.
-    - Keep a common stable OBS version across streamers for easier support.
-
-    ## Required information
-
-    - RTMP server URL
-    - Unique passphrase for your streamer account
-    - Team-approved output settings (bitrate, resolution, fps)
-
-    ### Confirm with the technical team
-
-    - Maximum allowed bitrate
-    - Recommended encoder profiles per hardware type
-    - Audio requirements (sample rate, channels, target levels)
-
-    ## Fast validation
-
-    1. Open OBS
-    2. Confirm your main scene is ready
-    3. Confirm your microphone captures signal
-    4. Confirm audio meters are not clipping
-
-    ## Detailed pre-live checklist
-
-    1. Backup scene ready (for example "pause" or "technical issue").
-    2. Microphone source clearly named and tested.
-    3. Capture sources locked to prevent accidental changes.
-    4. Audio monitoring active to catch noise, hum, or clipping.
-    5. Sensitive overlays/text checked (no private data).
-    6. Emergency reconnection procedure known by the streamer.
-
-    [Back to home](/en/)
+    [Next step: getting your credentials](/en/guides/stream-credentials/)
 
 credentials:
   body: |
-    # Broadcast Credentials
+    # Getting Your Connection Link
 
-    Each streamer uses a pair:
+    This link (or your Server + Key credentials) is retrieved **exclusively from the panel** (`programmation.fluffradio.com`, "Streamers" page), never through any other channel.
 
-    - RTMP server endpoint
-    - Unique passphrase
+    ## Case 1: you're in SRT mode with a scheduled slot (the normal case)
 
-    ## Expected format
+    Nothing to trigger yourself. Starting 10 minutes before your slot's start time, the system automatically opens the connection on its side.
 
-    - Server: `rtmp://your-server/live`
-    - Key/passphrase: unique secret per streamer account
+    1. Open the panel's "Streamers" page as your slot approaches (or earlier, the info updates itself, refreshed every 5 seconds).
+    2. In the "Direct" ("Live") block, your "URL d'ingest" ("Ingest URL") link is already ready, with a "Copier" ("Copy") button.
+    3. Clicking "Demarrer / armer" ("Start / arm") at this point starts nothing new — it just hands you back the already-open link. You can click it safely.
+    4. Paste that link into your streaming software (see [Configure OBS](/en/guides/configure-obs/)).
 
-    ## Stream key vs passphrase
+    If the block still shows "A l'antenne : — personne —" ("On air: — nobody —") while you're less than 10 minutes from your slot, wait a minute and refresh the page.
 
-    - OBS usually labels this field as `Stream Key`.
-    - In your organization, the same value can be managed as a unique passphrase.
-    - Functionally, this credential authorizes publishing to the broadcast server.
+    ## Case 2: you're in RTMP mode, or you want to broadcast outside a slot
+
+    In these two cases, nothing opens automatically — you trigger the connection yourself, in the "Direct" block on the "Streamers" page:
+
+    1. The Animator field already shows your name (fixed).
+    2. Pick the Mode (if several are allowed for your account).
+    3. If SRT: you can force a different encryption level for this session only (not saved).
+    4. Optionally set an on-air title (otherwise your scheduled slot's title is used).
+    5. Click "Demarrer / armer".
+    6. The link (or Server + Stream Key) appears in the same block.
+
+    Broadcasting outside a slot is only possible if an administrator has explicitly authorized your account to do so. If the button stays inactive, that's likely why.
+
+    If a message says "Ingest deja ouvert pour [someone else]" ("Ingest already open for [someone else]"): someone else is already broadcasting. An administrator can force a takeover if needed; you alone cannot.
 
     ## Security best practices
 
-    - Never share the passphrase in public channels.
-    - Never show the full key in live screen captures.
-    - Store credentials in a private and trusted location.
-    - Request rotation immediately if exposure is suspected.
-
-    ## Validation after entering credentials
-
-    1. Verify RTMP URL character by character.
-    2. Verify no leading/trailing spaces in the passphrase.
-    3. Run a short private stream test.
-    4. Confirm that monitoring sees the expected streamer identity.
-
-    ## Passphrase rotation
-
-    1. Contact technical support
-    2. Receive a new passphrase
-    3. Update OBS immediately
-    4. Run a private validation stream
-
-    ## Security warning signs
-
-    - Unexpected stream sessions on your channel.
-    - Repeated auth errors after accidental credential exposure.
-    - Credential usage from unauthorized machines.
-
-    In those cases, request immediate rotation and revoke the old credential.
+    - Never share this link, or your secrets, with anyone.
+    - Never show the OBS configuration window with the link/key visible during a filmed session or screen share.
+    - The link shown in the panel is only valid during an active session: once lost after the session ends, you'll need to retrieve a new one (automatic arming at your next slot, or a new click on "Demarrer / armer").
+    - If you suspect your secrets have leaked, ask an administrator **immediately** to regenerate them from the "Secrets" window on your animator profile. Regenerating immediately invalidates the old credentials; if you're live at the moment of regeneration, your current broadcast isn't physically cut, but an administrator will then need to restart your live session using "Forcer" ("Force") to give you a working link again.
 
     [Next step: Configure OBS](/en/guides/configure-obs/)
 
@@ -195,14 +177,25 @@ configure-obs:
 
     ## 2. Enter broadcast credentials
 
-    - `Server`: provided RTMP URL
-    - `Stream Key`: your unique passphrase
+    The format depends on your account's mode (see [Prerequisites](/en/guides/prerequisites/)) — both are retrieved from the panel's "Streamers" page, see [Getting Your Connection Link](/en/guides/stream-credentials/).
+
+    ### In RTMP
+
+    The information is split into two separately copyable parts in the panel:
+
+    - `Server`: paste the "Serveur" value shown in the panel.
+    - `Stream Key`: paste the "Cle de flux" value shown in the panel.
+
+    ### In SRT
+
+    You get a single full URL (no Server/Key split) — paste it as-is into your software's SRT connection field (the exact field depends on your OBS version or SRT plugin).
 
     ### Input best practices
 
-    - Copy/paste from a trusted source.
+    - Copy/paste from the panel, never a hand-written value.
     - Avoid hidden spaces or line breaks.
-    - Re-validate after any passphrase rotation.
+    - The link is only valid during an active session: if you lose it, go back to the panel rather than reusing an old one.
+    - Re-validate after any secrets regeneration by an administrator.
 
     ## 3. Output settings baseline
 
@@ -282,8 +275,9 @@ go-live:
 
     - OBS scenes ready
     - Microphone and desktop audio verified
-    - RTMP URL and passphrase entered correctly
+    - Link/credentials correctly entered in OBS (see [Configure OBS](/en/guides/configure-obs/))
     - Stable internet connection
+    - Panel's "Streamers" page open to check your status
 
     ### Last-minute checks
 
@@ -294,10 +288,9 @@ go-live:
 
     ## Start sequence
 
-    1. Open OBS
-    2. Load your live scene
-    3. Click `Start Streaming`
-    4. Confirm no server-side error is reported
+    - **In SRT with a scheduled slot**: nothing to "start" panel-side — your link already opened automatically 10 minutes before (see [Getting Your Connection Link](/en/guides/stream-credentials/)). Enter it in OBS, then simply click `Start Streaming` in OBS.
+    - **In RTMP, or outside a slot**: first click "Demarrer / armer" in the panel to get your link, enter it in OBS, then click `Start Streaming` in OBS.
+    - In both cases, check the panel's feedback: the "On air" badge switches to "(connecte)" ("connected") once the connection is actually established. Seeing "(pas encore connecte)" ("not connected yet") right after starting is normal, it only lasts a few seconds.
 
     ## During live
 
@@ -319,11 +312,27 @@ go-live:
     3. Inform your audience clearly and briefly.
     4. Record exact incident time for post-live analysis.
 
-    ## End of stream
+    ## End of slot: what happens automatically
 
-    1. Click `Stop Streaming`
-    2. Save scene changes if needed
-    3. Report technical incidents for follow-up
+    Your animator profile carries an "end-of-live" setting, chosen by an administrator, that determines what happens if you're still broadcasting when your scheduled slot's end time arrives:
+
+    - **Cut at the end of the slot**: automatic cut right at the scheduled time.
+    - **5 extra minutes then cut**: 5 minutes of grace before an automatic cut.
+    - **15 extra minutes then cut**: 15 minutes of grace before an automatic cut.
+    - **Never automatically cut**: it's up to you (or an administrator) to end the live session manually.
+
+    This system never cuts an ongoing live session without reason: the automatic cut only kicks in for a slot that has genuinely ended, never to free up the air while you're still broadcasting on time.
+
+    ## Ending your live session yourself
+
+    Whether before or after the scheduled end time, you can end your own live session at any moment, with no condition tied to the schedule: go to the "Streamers" page, "Direct" block, click "Arreter" ("Stop"). A message confirms "Direct coupe." ("Live session ended.") (or "Rien n'etait ouvert." — "Nothing was open." — if nothing was running; harmless).
+
+    ## End of stream (OBS side)
+
+    1. Click `Stop Streaming` in OBS
+    2. Click "Arreter" in the panel (Streamers page) if not already done automatically by your end-of-live policy
+    3. Save scene changes if needed
+    4. Report technical incidents for follow-up
 
     ## Recommended post-live technical review
 
@@ -380,27 +389,49 @@ common-issues:
   body: |
     # Common Issues
 
+    ## I still don't see a link even though my slot is approaching
+
+    - Check that your account is actually in **SRT** mode (RTMP never arms itself automatically, you must click "Demarrer / armer" yourself, see [Getting Your Connection Link](/en/guides/stream-credentials/)).
+    - If you're indeed in SRT, wait it out: arming happens exactly at 10 minutes before the start, not earlier. Refresh the panel's "Streamers" page.
+
+    ## A message says the ingest is already open for someone else
+
+    Someone else is currently broadcasting. Wait for them to finish, or contact an administrator if there's an emergency justifying a forced takeover ("Force" is admin-only).
+
+    ## The panel shows "not connected yet" even though I started streaming
+
+    Normal for a few seconds while the connection establishes technically. If it persists more than a minute, check your OBS configuration (mode, exact link) or contact an administrator.
+
+    ## I lost my link / my credentials no longer work
+
+    - If your live session is still active, open the "Secrets" window from your animator profile: the URL currently in use is shown there and copyable.
+    - Otherwise, only an administrator can give your credentials back to you or regenerate them. Regenerating immediately invalidates the old ones.
+
+    ## My account seems blocked / disabled
+
+    Contact an administrator: only they can reactivate your animator account.
+
     ## OBS cannot connect to the server
 
     Check:
 
-    - Correct RTMP URL
-    - Correct passphrase (no extra spaces)
+    - The link/credentials were retrieved **from the panel** just before (not an old reused value)
+    - Right field for the right mode: separate Server+Key in RTMP, a single URL in SRT (don't mix them up)
     - Working internet connection
     - Firewall/antivirus not blocking OBS
 
     Additional diagnostics:
 
-    - Confirm the target RTMP environment is correct (production vs test).
-    - Confirm the passphrase has not been rotated recently.
+    - Confirm the mode chosen in OBS matches the mode retrieved in the panel (SRT vs RTMP).
+    - Confirm the secrets haven't been regenerated in the meantime by an administrator.
     - Confirm system clock is correct.
 
     Actions:
 
-    1. Re-paste URL and passphrase
+    1. Go back to the panel's "Streamers" page and re-copy the link/credentials
     2. Restart OBS
     3. Test from another network if possible
-    4. Ask server-side verification for auth and connection attempts
+    4. Contact an administrator if the issue persists
 
     ## Stream freezes or stutters
 
@@ -473,3 +504,740 @@ common-issues:
     4. List attempted fixes to avoid repeated steps.
 
     [Back to troubleshooting](/en/troubleshooting/)
+
+admin-guide:
+  body: |
+    # Complete User Guide — FluffRadio Admin Panel
+
+    > This guide describes **absolutely everything** you can see and do in the FluffRadio admin panel (`programmation.fluffradio.com`), field by field, button by button, message by message. The goal: you should never need to ask "how do I do this?" — if a question crosses your mind while reading, a chapter is missing; tell us.
+
+    ## Table of contents
+
+    1. [Before you start: key concepts](#1-before-you-start-key-concepts)
+    2. [Signing in and out](#2-signing-in-and-out)
+    3. [The structure shared by every page](#3-the-structure-shared-by-every-page)
+    4. [Who has access to what (roles and groups)](#4-who-has-access-to-what-roles-and-groups)
+    5. [Home](#5-home)
+    6. [Media Library (Médiathèque)](#6-media-library-médiathèque)
+    7. [Uploaded Audio Files (Fichiers audio téléchargés)](#7-uploaded-audio-files-fichiers-audio-téléchargés)
+    8. [Playlists](#8-playlists)
+    9. [Schedule (Programmations)](#9-schedule-programmations)
+    10. [On-air Assets (Habillage d'antenne)](#10-on-air-assets-habillage-dantenne)
+    11. [Music Validation (Validation musiques)](#11-music-validation-validation-musiques)
+    12. [Streamers (animators & live control)](#12-streamers-animators--live-control)
+    13. [Debug API](#13-debug-api)
+    14. [Cache (request log)](#14-cache-request-log)
+    15. [Glossary](#15-glossary)
+    16. [FAQ / Troubleshooting](#16-faq--troubleshooting)
+
+    ---
+
+    ## 1. Before you start: key concepts
+
+    A few notions come up everywhere in the tool. Understanding them once saves a lot of questions later. Note: the interface itself is entirely in French; this guide keeps the exact French labels next to their English meaning so you can match what you see on screen.
+
+    - **Media library category** ("catégorie de médiathèque"). Every audio (or video) file belongs to exactly one category: **Musiques** (Music), **Jingles / habillage** (Jingles), **Podcasts / préenregistrés** (Podcasts), **Promos / publicités** (Ads), **VOD / Rediffusions** (VOD/Reruns), or **Autres** (Other). The category determines where the file shows up, which fields are required on upload, and how you find it in Schedule.
+    - **Validation** ("validation"). Only the **Musiques** (Music) category goes through a validation workflow (the "Validation musiques" page): an uploaded track is only usable in Schedule and visible in Media Library once an administrator has validated it. The other categories (jingles, podcasts, ads, VOD, other) have **no** such workflow — they're usable as soon as they're uploaded.
+    - **Slot** ("créneau"). A cell in the broadcast schedule: a day/time, a duration, a content type (playlist, live, a single file, or an alternating rotation), and a priority.
+    - **Priority** ("priorité"). A number from 0 to 100 attached to every slot. If two slots overlap in time, the one with the higher priority is broadcast. Two active slots at the **exact same** priority that overlap are **forbidden** — the system refuses to save them until you change one.
+    - **Animator** ("animateur"). A technical account, separate from a panel login account, that carries the connection credentials (secrets) used by streaming software (OBS, etc.) to broadcast live. A human user can be "linked" to an animator account of the same name.
+    - **Live / ingest** ("direct" / "ingest"). The technical connection an animator opens to broadcast live, either RTMP or SRT.
+    - **UTC / timezone.** Internally, every time is stored in Universal Time (UTC). The panel displays and lets you type times in **Paris time**, converting automatically — you never have to do that conversion yourself.
+
+    ---
+
+    ## 2. Signing in and out
+
+    ### Signing in
+
+    1. Open `programmation.fluffradio.com`. The public home page appears.
+    2. Click **"Se connecter"** ("Log in").
+    3. You're redirected to the secure sign-in page (Cognito, FluffRadio's identity service). Enter your username and password.
+    4. Once signed in, you're automatically taken to `/dashboard` (the panel's home page).
+
+    ### Special cases when signing in
+
+    - **You open a panel page while signed out**: instead of the page content, you see "Vous n'êtes pas connecté" ("You are not signed in") with a **"Se connecter"** button.
+    - **You're signed in but your account can't access this specific page**: you see **"Accès refusé — Votre groupe IAM ne permet pas d'accéder à cette page"** ("Access denied — your IAM group doesn't allow access to this page"), with a **"Retour au dashboard"** ("Back to dashboard") button that takes you to the first page your account can actually view.
+    - **Authentication error** (rare, usually a temporary hiccup of the sign-in service): a message "Erreur d'authentification : [technical detail]" shows instead of the page. Try reloading; if it persists, tell an administrator.
+
+    ### Signing out
+
+    Click **"Déconnexion"** ("Log out"), visible in the top-right of the dashboard bar on every page. You're immediately signed out and sent back to the sign-in page.
+
+    ---
+
+    ## 3. The structure shared by every page
+
+    Once signed in, every dashboard page (`/dashboard/...`) shares the exact same layout:
+
+    - **Left sidebar**:
+      - the FluffRadio logo;
+      - a **"LIVE STREAM"** card that constantly shows what's currently playing on air (loaded from the streaming server, auto-refreshed every 5 seconds), with a colored status badge:
+        - green / "EN DIRECT" ("LIVE"): someone is broadcasting live right now;
+        - another color / "READY": the system is ready but nothing special is happening (normal automatic playback);
+        - greyed out / "HORS LIGNE" ("OFFLINE"): the streaming server isn't responding;
+      - navigation links — **you only see the pages your account has access to** (see chapter 4). If a page mentioned in this guide doesn't show up in your sidebar, your account simply doesn't have the right; it's not a bug.
+    - **Top bar**: a "FluffRadio Admin" label, your name (or your email if no name is set on your account), and the **"Déconnexion"** ("Log out") button.
+    - **Content area**: the page title and its own content, described chapter by chapter below.
+
+    A **breadcrumb / page title** at the top of the content area always reminds you where you are.
+
+    ---
+
+    ## 4. Who has access to what (roles and groups)
+
+    Your account belongs to one or more **groups**, assigned by an administrator. These groups determine what you see:
+
+    | Group (internal name) | Name used in this guide |
+    |---|---|
+    | `admins` | Administrators — access to everything, no exception |
+    | `AccesMediatheque` | Media Library Access |
+    | `GestionPlaylist` | Playlist Management |
+    | `ProgrammeursRadio` | Radio Programmers |
+    | `StaffRadio` | Radio Staff (base role, given to everyone) |
+    | `UploaderRadio` | Radio Uploader |
+    | `Streamers` | Streamers |
+    | `AccesAuxStatus` | Status Access |
+
+    ### Full access table by page
+
+    | Page | Groups with access |
+    |---|---|
+    | Home | Everyone (Radio Staff is enough) |
+    | Media Library | Administrators, Media Library Access |
+    | Uploaded Audio Files | Administrators, Radio Uploader |
+    | Playlists | Administrators, Playlist Management |
+    | Schedule | Administrators, Radio Programmers |
+    | On-air Assets | Administrators, Radio Programmers, Streamers |
+    | Music Validation | Administrators **only** |
+    | Streamers | Administrators, Streamers |
+    | Debug API | Administrators **only** |
+    | Cache | Administrators **only** |
+
+    **If your account only has the base role** (Radio Staff, no other group), the Home page shows only a neutral welcome message, with no widget or control at all — that's expected, not a loading error.
+
+    **A special group, "Status Access"**, grants only the right to see the streaming server's status panel on the home page (version, memory, current live session…) read-only, without the other widgets or the admin-only Skip control.
+
+    **Finer checks exist inside some pages** beyond page-level access: for instance on "Uploaded Audio Files", a Radio Uploader account (non-admin) can upload but will **never** see the Edit/Delete buttons, nor the category picker — these controls are reserved to administrators and simply don't appear on screen (they're not greyed out with an explanation, they're absent).
+
+    ---
+
+    ## 5. Home
+
+    Route: `/dashboard`.
+
+    ### If your account only has the base role
+
+    You see only: *"Bienvenue sur FluffRadio. Aucune section supplémentaire n'est associée à votre compte."* ("Welcome to FluffRadio. No additional section is associated with your account.") Nothing else to do on this page.
+
+    ### If your account has a fuller role
+
+    You see, in this order:
+
+    **1. A grid of shortcut cards** (one per area):
+    - **"Fichiers audio"** (Audio Files) — *"Uploader, éditer et gérer la bibliothèque audio."* ("Upload, edit and manage the audio library.") — a **+** button takes you straight to the Uploaded Audio Files page.
+    - **"Playlists"** — while your playlists are loading: *"Chargement des playlists..."* ("Loading playlists..."); if you have none: *"Organiser les séquences musicales de diffusion."* ("Organize the music broadcast sequences."); otherwise, a clickable list of your **first 5 playlists** with their track count in parentheses (e.g. "Sélection du vendredi soir (12 pistes)") — clicking one takes you straight to that playlist on the Playlists page. A **+** button leads to the Playlists page in general.
+    - **"Programmations"** (Schedule) — *"Préparer les contenus à diffuser par créneau."* ("Prepare content to broadcast per slot.") — **+** button to the Schedule page.
+    - **"Cache"** — *"Inspecter et mettre à jour le cache des données."* ("Inspect and update the data cache.") — **+** button to the Cache page.
+
+    **2. The streaming server status panel** (also visible to the "Status Access" group) — see the detailed description in chapter 12 ("AwooStatusPanel"): the server's version and uptime, live status, the currently playing track, a chart of memory usage over the last 5 minutes, and (administrators only) a **"Passer"** ("Skip") button to skip the current automatic track.
+
+    **3. An explicit banner**: *"Section legacy (Icecast/Liquidsoap) — nécessite `ICECAST_STATUS_URL` / `LIQUIDSOAP_STATUS_URL`, non configurées actuellement."* ("Legacy section (Icecast/Liquidsoap) — requires `ICECAST_STATUS_URL` / `LIQUIDSOAP_STATUS_URL`, not currently configured.") — this tells you the section below shows **fallback/simulated data**, not real statistics (the real streaming status is the panel above, not this one).
+
+    **4. The "Streaming Manager (Icecast + Liquidsoap)" panel** (legacy, safe to ignore for everyday use):
+    - an **"On Air"** / **"Off Air"** badge;
+    - four buttons: **Start**, **Stop**, **Skip**, **Reload** — they send a command, but until the technical variables above are configured, their real-world effect is limited/simulated;
+    - a "now playing" block (track, artist, bitrate, peak listeners);
+    - **Listeners**, **Bandwidth** (estimated), **Storage** (disk space used/total) counters;
+    - a **"Recently played"** list;
+    - a **"Listeners trend"** bar chart.
+
+    > In short: to know the real broadcast status, look at the top panel (AwooStatusPanel/LIVE STREAM); the bottom block is an older technical dashboard not wired to the current infrastructure.
+
+    ---
+
+    ## 6. Media Library (Médiathèque)
+
+    Route: `/dashboard/mediatheque`. Access: Administrators, Media Library Access.
+
+    This page is for **browsing and listening only** to the already-validated music catalog — you can't upload or edit anything here (for that, see "Uploaded Audio Files" and "Music Validation").
+
+    ### What you see
+
+    - A search box.
+    - A **"Grouper par"** ("Group by") selector with four choices: **Artiste** (Artist), **Album**, **Genre**, **Année** (Year). Tracks are organized into collapsible/expandable groups accordingly (each group has a small arrow to click to open/close it).
+    - Additional filters (genre, language).
+    - Every track has its own inline playback controls right in the list (play/pause, previous/next, volume), without opening a separate window.
+    - An **"E"** badge appears next to a track's title if it's marked as explicit content.
+
+    ### What you can't do here
+
+    Upload a file, edit metadata, delete a track: those actions happen from "Uploaded Audio Files" (for admins and Radio Uploader) or "Music Validation" (admins).
+
+    ---
+
+    ## 7. Uploaded Audio Files (Fichiers audio téléchargés)
+
+    Route: `/dashboard/fichiers-audio`. Access: Administrators, Radio Uploader.
+
+    This page has two parts: an upload block at the top, and the catalog list below.
+
+    ### 7.1 Uploading one or more files
+
+    **Step 1 — select files.** A drop zone reading *"Déposer des fichiers audio ici ou cliquer pour sélectionner"* ("Drop audio files here or click to select"), with the note *"Sélection multiple · MP3, WAV, OGG, M4A, vidéo (podcasts) · max 25 fichiers"* ("Multiple selection · MP3, WAV, OGG, M4A, video (podcasts) · max 25 files"). You can:
+    - drag and drop one or several files directly into the zone;
+    - or click it to open your computer's file picker (accepts audio and video formats).
+
+    A counter at the bottom of the zone shows how many slots remain (*"X/25 fichiers sélectionnés · Y places restantes"*), or *"Limite atteinte : 25/25 fichiers sélectionnés"* ("Limit reached: 25/25 files selected") if you're at the max. If you try adding more than the limit: *"Limite atteinte : vous ne pouvez pas ajouter plus de 25 fichiers."* (or, if some still go through: *"Limite atteinte : seuls les 25 premiers fichiers seront pris en compte."*).
+
+    **Step 2 — the upload rules (mandatory, once per browser).** The **very first time** you open this page (or as long as you haven't ticked "remember"), a window opens and **blocks the rest of the page** while it's open:
+    - Title: *"Règlement d'upload des titres"* ("Track upload rules").
+    - Text: *"Avant d'uploader des fichiers, merci de lire le règlement ci-dessous. Il détaille les règles à respecter pour les métadonnées, les droits et la qualité des titres soumis."* ("Before uploading files, please read the rules below. They detail the rules to follow for metadata, rights, and the quality of submitted tracks.")
+    - **"Ouvrir le règlement (PDF)"** ("Open the rules (PDF)") button: opens the official PDF document in a new tab.
+    - Until you click this button, you see: *"Ouvrez le règlement pour débloquer la case de confirmation ci-dessous."* ("Open the rules to unlock the confirmation checkbox below.") — and the checkbox below stays **greyed out, impossible to check**.
+    - Once the PDF has been opened (even if you don't read it all), the message becomes: *"✓ Règlement ouvert : vous pouvez confirmer sa lecture ci-dessous."* ("✓ Rules opened: you can now confirm you've read them below."), and the checkbox unlocks.
+    - Checkbox 1: **"J'ai bien lu et compris le règlement"** ("I have read and understood the rules") — must be checked to continue.
+    - Checkbox 2 (optional): **"Se souvenir de mon choix et ne plus afficher ce message"** ("Remember my choice and don't show this message again") — if checked, the window won't reappear on this browser (this is remembered locally on your computer/browser, not on your account — if you switch computer or browser, it will reappear).
+    - **"Fermer"** ("Close") button: stays disabled until checkbox 1 is checked.
+
+    **Step 3 — each file's fields.** For every added file, a card appears with:
+    - the filename and its size (in KB or MB);
+    - a status: "En attente" (Pending), "Upload..." (with an individual progress ring), "Réussi" (Success, green checkmark), or "Erreur" (Error, red cross, with the error message shown right below);
+    - fields auto-filled whenever possible:
+      - **Titre** (Title) and **Artiste** (Artist): guessed from the file's embedded tags (ID3), or from the filename if formatted "Artist - Title.mp3" (otherwise, just the filename is used as the title);
+      - **Album**, **Année** (Year), **Genre**: guessed from ID3 tags if present;
+      - **Point de départ** (Cue-in): always pre-filled to `0`;
+      - **Point de fin** (Cue-out): automatically pre-filled to the file's detected total duration.
+    - **Title field*** (required, for all file types).
+    - **Artist field*** (required, for all file types).
+    - **Category field**:
+      - If you're a plain **Radio Uploader** account (non-admin): this field doesn't appear at all, a fixed field shows just "Musiques" — you can only upload music.
+      - If you're an **administrator** (or any account with category-picking rights): a dropdown offers **Musiques** (Music), **Jingles / habillage** (Jingles), **Podcasts / préenregistrés** (Podcasts), **Promos / publicités** (Ads), **VOD / Rediffusions** (VOD/Reruns), **Autres** (Other). If you pick anything other than "Musiques", a note appears: *"Rangé dans la médiathèque « [category] », pas dans les musiques."* ("Filed under « [category] » in the media library, not under music.")
+    - **Genre field**: required (marked with an asterisk) only if the category is "Musiques"; optional otherwise (the label then reads "Genre (facultatif)" — "Genre (optional)"). Filled via a dedicated genre picker (searchable dropdown of normalized genres, or free text for a custom genre).
+    - **Album field***: appears **only** for the "Musiques" category, and is required there.
+    - **Year field**: required for "Musiques", optional otherwise.
+    - **Language field**: required for "Musiques" (dropdown of normalized languages; picking "Autre"/"Other" reveals a free-text field), optional otherwise.
+    - **SACEM registry field***: appears **only** for the "Musiques" category, and is required there. Next to the label, two links: **"Rechercher ce titre ↗"** ("Search this title ↗") (opens a pre-filled search on the SACEM website using the title and artist already entered) and **"Répertoire SACEM ↗"** ("SACEM repertoire ↗") (opens SACEM's general repertoire).
+    - **"Contenu explicite"** ("Explicit content") checkbox (always optional, regardless of category).
+    - **"Contenu furry"** ("Furry content") checkbox (always optional, regardless of category — a site-specific tag).
+    - **Point de départ (s)*** (Cue-in, seconds) and **Point de fin (s)*** (Cue-out, seconds): always required, in seconds, regardless of category.
+    - If required fields are missing for a file, a red message appears right under its card: *"Champs obligatoires manquants : [list of fields]."* ("Missing required fields: [list].")
+    - A **"Retirer"** ("Remove") button (trash icon) removes this file from the queue before upload (unavailable while this specific file's upload is in progress).
+
+    **Step 4 — starting the upload.** The **"Uploader N fichier(s)"** ("Upload N file(s)") button at the bottom:
+    - stays **disabled** as long as any file in the list is missing a required field (hovering over it shows: *"Complète tous les champs obligatoires avant d'uploader"* — "Fill in all required fields before uploading");
+    - while sending, shows *"Upload en cours..."* ("Upload in progress...") with a spinning icon, and an **overall progress bar** (percentage, weighted by file size) appears above the list.
+
+    **Step 5 — after the upload.** Once every file has been sent successfully, the queue clears itself automatically and a message appears at the top of the page: *"N fichier(s) uploadé(s). Cliquez sur « Actualiser » pour les afficher."* ("N file(s) uploaded. Click « Refresh » to display them.") — **the upload does not automatically refresh the catalog list below**, you must explicitly click the **"Actualiser"** ("Refresh") button.
+
+    **"Vider"** ("Clear") button: removes every file currently queued (before sending), without uploading anything.
+
+    ### 7.2 Managing the existing catalog
+
+    Below the upload block:
+    - A search box: *"Rechercher par titre ou artiste..."* ("Search by title or artist...").
+    - A **"Actualiser"** ("Refresh") button (with a refresh icon) reloads the full list from the server.
+    - Every track shows: a music-note icon, its title, its artist ("Artiste inconnu" — "Unknown artist" — if missing), its duration, its upload date.
+    - Buttons per track:
+      - **Play / Stop** (round icon): plays the track directly in a player that appears above the list, with a dedicated Stop button.
+      - **Modifier** (Edit, pencil icon, administrators only): opens an edit window (see below).
+      - **Supprimer** (Delete, trash icon, administrators only): asks for confirmation (*"Confirmer la suppression ?"* — "Confirm deletion?") then **permanently** deletes the track.
+    - At the bottom: pagination controls (tracks per page, navigation).
+
+    ### 7.3 The "Corriger les métadonnées" (Fix metadata) window
+
+    Opened via the Edit button (administrators only). Contains:
+    - A play/stop button right in the window's header.
+    - **Titre** (Title) (free text).
+    - **Artiste** (Artist).
+    - **Album** (optional).
+    - **Genre** (dedicated picker).
+    - **Année** (Year, optional, digits only).
+    - **Durée** (Duration): shown read-only, not editable (computed automatically from the file).
+    - **Langue** (Language) (dropdown + custom field if "Autre"/"Other").
+    - **Contenu explicite** (Explicit content) checkbox, **Contenu furry** (Furry content) checkbox.
+    - **Registre SACEM** (SACEM registry) (with the same SACEM help links as on upload).
+    - **Point de départ (s)** (Cue-in) and **Point de fin (s)** (Cue-out).
+    - The track's technical ID is shown at the bottom of the window ("ID : ...") — useful if you need to report a specific issue to an administrator.
+    - **"Annuler"** (Cancel) button: closes without saving anything.
+    - **"Sauvegarder"** (Save) button: stays disabled until at least one field has actually been changed; on success, shows *"Métadonnées mises à jour avec succès."* ("Metadata successfully updated.") and closes the window.
+
+    **Validations applied before saving** (a red message shows and nothing is sent if any fails):
+    - Year: must be a number if provided (*"Année invalide : entrez une valeur numérique."* — "Invalid year: enter a numeric value.").
+    - Cue-in / cue-out: must be numbers (seconds), with or without decimals (*"Point de départ invalide : entrez uniquement des chiffres (secondes, >= 0)."* — same for cue-out).
+    - Cue-out must be strictly greater than cue-in (*"Le point de fin doit être supérieur au point de départ."*).
+    - Neither can exceed the track's actual duration (*"Le point de fin ne peut pas dépasser la durée de la piste ([duration])."*).
+    - If nothing changed: *"Aucune modification détectée."* ("No changes detected.") (the Save button is disabled in that case anyway).
+
+    **Important**: editing a track's metadata **never changes its validation status** — an already-validated track stays validated after an admin edits it (the status is explicitly preserved behind the scenes).
+
+    ### 7.4 Possible error messages
+
+    Every action on this page (loading, upload, delete, save) can show an explicit error message on failure, in this general form: *"[Action] : [session expirée ou non autorisée / accès refusé / introuvable côté serveur / erreur interne du serveur backend] — [detail]."* ("[Action]: [session expired or unauthorized / access denied / not found server-side / internal backend server error] — [detail].") If you see "session expirée ou non autorisée" ("session expired or unauthorized"), sign out then sign back in; for other cases, contact an administrator if the problem persists.
+
+    ---
+
+    ## 8. Playlists
+
+    Route: `/dashboard/playlists`. Access: Administrators, Playlist Management.
+
+    ### 8.1 Screen overview
+
+    The screen is split in two: a left column (playlist list) and a main area on the right (content of the selected playlist).
+
+    ### 8.2 Left column
+
+    - **"Playlists"** title with a badge showing the total count.
+    - **Refresh** button (icon): reloads both the playlist list and the available music catalog.
+    - **+** button: opens the new-playlist creation window.
+    - A search-by-name box (only shown once at least one playlist exists).
+    - The list itself: each row shows an avatar (the name's first letter), the playlist's name, and its track count. An **✕** button on each row (on hover) deletes it directly.
+    - Special states:
+      - Loading: *"Chargement..."* ("Loading...").
+      - No playlist at all: *"Aucune playlist"* ("No playlist") + *"Clique sur + pour en créer une"* ("Click + to create one").
+      - A search returns nothing: *"Aucun résultat"* ("No result") + *"Essaie un autre nom"* ("Try another name").
+
+    ### 8.3 Creating a playlist
+
+    **+** button → **"Nouvelle playlist"** ("New playlist") window:
+    - **Nom** (Name) field (required, example shown: "Sélection du vendredi soir"). Pressing Enter also submits.
+    - **Annuler** (Cancel) button.
+    - **Créer** (Create) button (greyed out while the name is empty; shows "Création..." — "Creating..." — while in progress).
+
+    The created playlist appears immediately in the list, empty (0 tracks).
+
+    ### 8.4 Deleting a playlist
+
+    Clicking a row's **✕** → confirmation window: *"Supprimer « [name] » ?"* ("Delete « [name] »?") with the text *"Cette action est irréversible : la playlist et son ordre de pistes seront définitivement supprimés."* ("This action is irreversible: the playlist and its track order will be permanently deleted.") **Annuler** (Cancel) / **Supprimer** (Delete) buttons (shows "Suppression..." — "Deleting..." — while in progress). If the deleted playlist was open on screen, the view reverts to "Aucune playlist sélectionnée" ("No playlist selected").
+
+    ### 8.5 Viewing and editing a playlist's content
+
+    Clicking a playlist in the left list opens it on the right with:
+    - Its name as a title, and below it: *"N piste(s) · [total duration]"* ("N track(s) · [total duration]") (the total duration is computed and shown as "1h 23m" or "4m 05s").
+    - **"+ Ajouter des musiques"** ("+ Add tracks") button (see §8.6).
+    - An **autosave status indicator**, on the right, that changes on its own:
+      - "✓ Enregistré" ("Saved", idle/normal state);
+      - "Modifications en attente..." ("Changes pending...", you just made a change, saving will trigger shortly);
+      - "Enregistrement..." ("Saving...", currently sending);
+      - "Échec — réessayer" ("Failed — retry", autosave failed; **clicking this indicator manually retries the save**).
+    - The playlist's track list, each with:
+      - an editable numeric field showing its **position** (you can type a new number directly and press Enter or click elsewhere to move the track there);
+      - a **drag handle** (6-dot icon) to reorder by dragging with the mouse;
+      - the title (with an **"E"** badge if explicit), the artist, the genre (badge), plus an extra line with album/language/year if known, and another line showing cue points ("▶ 0:00 – 3:12" for example) if set;
+      - the duration;
+      - an **✕** button to remove the track from the playlist (doesn't delete the track from the general catalog, just from this playlist).
+    - If the playlist is empty: *"Cette playlist est vide"* ("This playlist is empty") + *"Ajoute des musiques pour commencer à construire l'ordre de diffusion"* ("Add tracks to start building the broadcast order") + an add-tracks button.
+    - Pagination controls at the bottom of the track list if it's long.
+
+    **Important point**: changes (adding, removing, reordering) are **saved automatically** about 1 second after your last action (no separate "Save" button to click). If you quickly switch playlists or close the tab right after a change, wait to see "Enregistré" ("Saved") to be sure it was actually captured.
+
+    ### 8.6 Adding tracks to a playlist
+
+    **"+ Ajouter des musiques"** button → a full-screen window opens: **"Ajouter des musiques à « [playlist name] »"** ("Add tracks to « [playlist name] »").
+
+    **Search and filter tools**, all combinable:
+    - Text search box (title, artist, album).
+    - **"Tous les artistes"** ("All artists") dropdown → list of every artist present in the catalog.
+    - **"Tous les genres"** ("All genres") dropdown.
+    - **"Toutes les langues"** ("All languages") dropdown.
+    - **"Tous les albums"** ("All albums") dropdown.
+    - **"Explicite : indifférent"** ("Explicit: indifferent") dropdown → "Explicite seulement" (Explicit only) or "Non explicite seulement" (Non-explicit only).
+    - **Year** range: two Min / Max fields.
+    - **Duration (min)** range: two Min / Max fields, in minutes.
+    - **"Réinitialiser"** ("Reset") button (only shown if at least one filter is active): resets every filter at once.
+
+    **Selection and adding**:
+    - **"Tout sélectionner (N)"** ("Select all (N)") checkbox at the top: checks/unchecks every track **matching the currently active filters** (not necessarily the whole catalog if a filter is applied).
+    - Every result row has its own checkbox, and an individual **+** button on the right (shows a green check if the track is already in the playlist — the button then becomes disabled with the tooltip "Déjà dans la playlist" — "Already in the playlist").
+    - **"Ajouter à la playlist (N)"** ("Add to playlist (N)") button: adds all currently checked tracks at once.
+    - Note: only tracks **already validated by an administrator** show up in this list (see chapter 11 "Music Validation").
+    - While the playlist's current content hasn't finished loading yet, the add buttons stay disabled with the tooltip *"Chargement de la playlist en cours..."* ("Playlist is loading...") — wait a moment.
+
+    **"Terminé (N piste(s))"** ("Done (N track(s))") button at the bottom closes the window (additions are already applied, no separate "confirm" needed).
+
+    ### 8.7 Where does a playlist's author come from?
+
+    A playlist's "author" field fills itself automatically with your email address (derived from your login account) — you never have to type it yourself.
+
+    ---
+
+    ## 9. Schedule (Programmations)
+
+    Route: `/dashboard/programmations`. Access: Administrators, Radio Programmers.
+
+    This is the tool's most complex screen: it builds the station's entire broadcast schedule.
+
+    ### 9.1 Overview
+
+    At the top of the page:
+    - **Week navigation**: ◀ / ▶ arrows to change week, a central label "Semaine du [day] [month]" ("Week of [day] [month]"), and a **"Aujourd'hui"** ("Today") button that only appears if you're not on the current week.
+    - **"Repli (aucun créneau)"** ("Fallback — no slot"): a dropdown to choose the **fallback playlist**, the one that plays automatically when nothing is scheduled at a given moment. "— aucun —" ("— none —") is a valid choice (in which case, silence when nothing is scheduled).
+    - **"Enregistrer"** ("Save") button (top right): saves the entire displayed schedule. Nothing is sent to the server until you click it, **except** that each grid cell updates in your own browser immediately after you confirm a slot (see §9.3) — but until you click "Enregistrer", nobody else sees these changes, and reloading the page would lose them.
+
+    Right below, a live preview:
+    - **"En ce moment"** ("Right now"): the title and content of the currently broadcast slot (with its priority), or "— rien —" ("— nothing —") if no slot covers the present moment.
+    - **"Ensuite"** ("Next"): the next slot's title and start time, or "— rien —".
+
+    ### 9.2 The weekly grid
+
+    A 7-column (Monday to Sunday) by 24-row (hourly, subdivided by half-hour) grid.
+
+    - **Clicking an empty cell** opens the new-slot creation window, pre-filled with that cell's day and time.
+    - **Clicking an existing colored block** opens that slot for editing.
+    - Each block shows: its time range ("14:00–16:00"), its priority ("· P50"), a small icon representing its type, and its title.
+    - A **disabled** slot (see §9.3, the "Actif" checkbox) appears visually greyed out/dimmed in the grid, but stays clickable for editing.
+    - If two slots of different priorities overlap visually, the higher-priority one is drawn on top.
+
+    ### 9.3 Creating or editing a slot — every field in detail
+
+    **Type de créneau** (Slot type) — a dropdown with 7 choices, each pre-filling a default priority and determining the fields that follow:
+
+    | Slot type (French label) | Meaning | Default priority | What you pick next |
+    |---|---|---|---|
+    | Playlist | Playlist | 1 | a playlist |
+    | Playlist alternée | Alternating playlist | 1 | two or more sources that alternate |
+    | Émission — direct | Live show | 50 | an animator |
+    | Émission — préenregistrée | Pre-recorded show | 50 | a single file from the "Podcasts" category |
+    | Habillage / virgule | Jingle/ident | 25 | a single file from the "Jingles" category |
+    | Promotion | Ad/Promo | 75 | a single file from the "Ads" category |
+    | VOD / Rediffusion | VOD/Rerun | 50 | a single file from the "VOD" category |
+
+    Changing the type automatically recomputes the default priority (you can always adjust it afterwards) and clears already-picked content fields if they no longer apply.
+
+    **Priorité** (Priority) — a 0–100 slider, with the current value shown in parentheses and a reminder of the chosen type's default value. Permanent help text: *"Priorité plus haute = passe devant en cas de chevauchement. Deux créneaux actifs de même priorité qui se chevauchent sont refusés à l'enregistrement."* ("Higher priority = takes precedence on overlap. Two active slots at the same priority that overlap are rejected on save.")
+
+    **Titre** (Title) — text field, required.
+
+    **Récurrence** (Recurrence) — three possible choices:
+    - **Toutes les semaines** ("Every week"): the slot recurs every week, on the days checked below.
+    - **Une semaine sur N** ("One week in N"): requires an extra **"Une semaine sur"** ("One week in") field (a number from 2 to 8), and a **"Semaine de référence (première diffusion)"** ("Reference week — first broadcast") field (a date). The cycle is counted from the **Monday of the week you pick as reference** — help text: *"Le cycle est compté à partir du lundi de cette semaine, comme le serveur de diffusion — pas de notion de semaine « paire / impaire »."* ("The cycle is counted from the Monday of that week, exactly like the broadcast server — there's no notion of an « odd/even » week.")
+    - **Ponctuel (une date)** ("One-off — a single date"): only a **Date** field appears; no weekdays to check; this slot never recurs and shows up in the separate "Événements ponctuels" (One-off events) list (§9.7).
+
+    **Jours** (Days, recurring only) — Monday-to-Sunday checkboxes, at least one must be checked.
+
+    **Début** (Start) / **Fin** (End) — two time pickers. Permanent help text: *"L'heure de fin est la fenêtre du créneau, pas une coupure : le changement se fait à la fin du morceau en cours."* ("The end time is the slot's window, not a hard cut: the change happens at the end of the currently playing track.") — and, for non-live types: *"« Max boucles » renseigné = travail dû, rattrapé s'il démarre en retard ; vide = remplissage, abandonné à la fin de la fenêtre."* ("A filled-in « Max loops » = work owed, caught up if it starts late; empty = filler, abandoned at the end of the window.")
+
+    **Fields specific to each type:**
+
+    - **"Playlist" type**:
+      - **Playlist** dropdown (required);
+      - **"Lecture aléatoire"** ("Shuffle") checkbox;
+      - **"Max boucles (optionnel)"** ("Max loops, optional") field: an integer ≥ 1. Empty = the playlist loops indefinitely until the time window ends (filler, sacrificable). A value = a precise number of laps to do (content considered important, caught up even if it starts late).
+
+    - **"Émission — direct" (Live show) type**:
+      - **Animateur** (Animator) dropdown (required) — if the list is empty, message: *"Aucun animateur chargé — crée-les dans « Streamers & direct »."* ("No animator loaded — create them under « Streamers & live ».")
+      - Permanent help text: *"Un créneau direct ne joue aucun média : laisser une playlist de fond en dessous n'est pas un conflit, c'est le filet si le direct ne démarre pas."* ("A live slot plays no media: leaving a background playlist underneath is not a conflict, it's the safety net if the live show doesn't start.") — meaning it's normal and recommended to stack a lower-priority playlist under every live slot, so something plays automatically if the animator doesn't connect.
+
+    - **Media types (Pre-recorded show, Jingle, Ad, VOD)**:
+      - a **"Catégorie de médiathèque"** ("Media library category") dropdown is shown but **already pre-filled consistently with the chosen type** (you can change it, though it's usually unnecessary);
+      - **a single file** to pick (not a list): a search area shows results as clickable rows (title, artist, genre, duration) — clicking a row selects that file;
+      - **picking a file automatically recomputes the slot's end time** so it matches the file's real duration exactly (the start time doesn't move, only the end adjusts);
+      - if the chosen category is "Musiques", a note specifies: *"seules les pistes validées par un admin sont proposées"* ("only admin-validated tracks are offered");
+      - once picked, the selected file's name is shown under the picker;
+      - a **"Max boucles (optionnel)"** field is also available here.
+
+    - **"Playlist alternée" (Alternating playlist) type**:
+      - Help text: *"Au moins deux sources. À chaque tour, la playlist joue « [nombre] » éléments puis on passe à la suivante. Chaque source garde sa position et son budget de boucles ; l'ensemble n'est rattrapable que si toutes les sources ont un « Max boucles »."* ("At least two sources. Each turn, the playlist plays « [number] » items then moves to the next one. Each source keeps its own position and loop budget; the whole thing is only catch-up-able if every source has a « Max loops ».")
+      - Each **source** (at least 2, more can be added) has:
+        - a type: **Playlist** or **Liste d'audios** ("List of audio files");
+        - **"Nombre joué d'affilée"** ("Number played in a row"): how many items from this source play before moving to the next source (e.g.: 3 songs, then 1 jingle, back to 3 songs...);
+        - if type Playlist: a playlist picker;
+        - if type "Liste d'audios": a media category picker, then a multi-select search (you can add several files to this source, each listed with an **✕** to remove it);
+        - **"Lecture aléatoire"** (Shuffle) checkbox;
+        - **"Max boucles (optionnel)"** field;
+        - a **"Retirer"** ("Remove") button appears on each source once there are more than 2 (you can't go below 2 sources).
+      - **"+ Ajouter une source"** ("+ Add a source") button to add more.
+
+    **Description** — free multi-line text field, optional.
+
+    **"Actif"** ("Active") checkbox — unchecked, the slot stays saved but is never broadcast (useful to prepare a slot in advance, or temporarily suspend a show without deleting it).
+
+    **Buttons at the bottom of the window:**
+    - **"Supprimer"** ("Delete") (only when editing an existing slot, not when creating one): immediately removes this slot from the displayed schedule (to be confirmed afterward by clicking "Enregistrer" at the top of the page for it to be final).
+    - **"Annuler"** ("Cancel"): closes the window without keeping anything.
+    - **"Valider"** ("Confirm"): checks and applies your changes **to the local display** (not yet sent to the server — you still need to click "Enregistrer" at the top of the page afterward).
+
+    ### 9.4 What blocks confirming a slot (error messages)
+
+    Before anything is even sent to the server, clicking **"Valider"** can show:
+    - *"Le titre est requis."* ("The title is required.")
+    - *"Choisis au moins un jour."* ("Choose at least one day.") (recurring with no day checked)
+    - *"La fin doit être après le début."* ("The end must be after the start.")
+    - *"Choisis une playlist."* ("Choose a playlist.") (Playlist type with none chosen)
+    - *"Choisis un animateur."* ("Choose an animator.") (Live type with none chosen)
+    - *"Ajoute au moins un audio."* ("Add at least one audio file.") (media type with none chosen)
+    - *"Une alternance demande au moins deux sources."* ("An alternation requires at least two sources.")
+    - *"Chaque source « playlist » doit désigner une playlist."* ("Every « playlist » source must specify a playlist.")
+    - *"Chaque source « audios » doit contenir au moins un audio."* ("Every « audio » source must contain at least one audio file.")
+    - *"« Nombre joué d'affilée » doit être au moins 1."* ("« Number played in a row » must be at least 1.")
+    - If, after confirming, your (active) slot overlaps in time with another active slot at the **exact same priority**: *"Chevauchement avec un créneau de priorité [N] : [conflicting slot titles]. Donne-leur des priorités différentes (la plus haute gagne)."* ("Overlap with a slot at priority [N]: [conflicting slot titles]. Give them different priorities (the higher one wins).") — confirmation is blocked until this is resolved (change one slot's priority, or disable one via "Actif").
+
+    ### 9.5 Saving the whole schedule
+
+    Clicking **"Enregistrer"** at the top of the page triggers several checks, in order:
+
+    1. **Looking for any same-priority overlap** across the entire schedule (not just the slot you just edited) — if a conflict exists anywhere, saving is refused with *"Des créneaux actifs de même priorité se chevauchent — le backend les refusera. Donne des priorités distinctes."* ("Active slots at the same priority overlap — the backend will reject them. Give them distinct priorities.") and a detailed list of conflicting pairs appears below.
+    2. **Structural validation** of the entire document — on a (rare) technical issue: *"La programmation ne respecte pas le format attendu — rien n'a été envoyé."* ("The schedule doesn't match the expected format — nothing was sent.") with details.
+    3. **Sending to the server.** Possible responses:
+       - Success: *"Programmation enregistrée. Elle sera prise en compte à l'antenne dans les 30 minutes au plus."* ("Schedule saved. It will be reflected on air within 30 minutes at most.") — **remember this delay well: a saved change is never instant on air**, it can take up to half an hour for the streaming server to pick it up.
+       - **Version conflict** (someone else saved in the meantime): *"Conflit : la programmation a été modifiée entre-temps (v...). Rechargement..."* ("Conflict: the schedule was modified in the meantime (v...). Reloading...") — the page automatically reloads the latest version; **your unsaved changes since that reload are lost**, you'll need to redo them after reloading.
+       - **Insufficient rights**: *"Ton compte n'a pas le droit de modifier la programmation."* ("Your account doesn't have the right to modify the schedule.")
+       - Other error: the message returned by the server, with field-level details if available.
+
+    ### 9.6 A message that can appear when the page loads
+
+    *"N créneau(x) récurrent(s) recalé(s) sur une ancre cohérente (ancien modèle « semaine paire/impaire »). Enregistre pour figer."* ("N recurring slot(s) realigned onto a consistent anchor (old « odd/even week » model). Save to lock it in.") — this means some older slots, created under a now-abandoned recurrence system, have been automatically reinterpreted in an equivalent way. **Click "Enregistrer" to make this reinterpretation permanent**; otherwise, it will be recalculated on every page load (harmless as long as you haven't touched anything, but better to lock it in).
+
+    If the schedule can't be loaded from the server at all: *"Programmation indisponible ([detail]) — brouillon local, l'enregistrement échouera."* ("Schedule unavailable ([detail]) — local draft, saving will fail.") — you can still browse/prepare slots in this state, but nothing can be saved until the server connection is restored.
+
+    ### 9.7 The lists at the bottom of the page
+
+    - **"Événements ponctuels (N)"** ("One-off events (N)"): only single-date (non-recurring) slots, sorted by date. A **"+ Ponctuel"** ("+ One-off") button creates a new one directly.
+    - **"Tous les créneaux (N)"** ("All slots (N)"): every slot, with a search box ("Rechercher (titre, playlist, animateur…)" — "Search (title, playlist, animator…)"), sorted by descending priority then by title. Each row shows: the recurrence type as text, the time range, an icon representing the type, the title, a description of the content (playlist name / animator / file(s)), and the priority. Clicking a row opens that slot for editing (same as clicking its grid block).
+
+    ### 9.8 Footer
+
+    A discreet reminder at the bottom of the screen: *"Connecté en tant que [your name] — heures affichées en Europe/Paris, converties en UTC à l'enregistrement · version [version number]"* ("Signed in as [your name] — times shown in Europe/Paris, converted to UTC on save · version [version number]").
+
+    ---
+
+    ## 10. On-air Assets (Habillage d'antenne)
+
+    Route: `/dashboard/habillage-antenne`. Access: Administrators, Radio Programmers, Streamers.
+
+    This page lets you browse, listen to, download, and (for administrators) edit every file in the media library **outside the main Music upload flow** — though it also gives access to the Music category for convenience.
+
+    ### 10.1 Screen layout
+
+    - A row of tabs, one per category: **Musiques** (Music), **Jingles / habillage** (Jingles), **Podcasts / préenregistrés** (Podcasts), **Promos / publicités** (Ads), **VOD / Rediffusions** (VOD/Reruns), **Autres** (Other). The default open tab is "Jingles / habillage".
+    - A search box (title, artist, genre).
+    - A table with, per row: action buttons (Listen, Download, and Edit for admins), title, artist, genre.
+    - If a tab has never been opened, its content loads the first time you click it (not all preloaded).
+    - Message if the category is empty: *"Aucun élément dans cette catégorie (ou endpoint indisponible)."* ("No item in this category (or endpoint unavailable).")
+    - Message if a search returns nothing but the category has items: *"Aucun élément."* ("No item.")
+
+    ### 10.2 Actions per row
+
+    - **Play/Stop** (play/stop icon): starts playback. A player appears, **stuck to the bottom of the screen** (visible even while scrolling), showing the current track's title/artist and standard browser audio controls. Clicking the same row's button again stops it.
+    - **Download**: downloads the file to your computer, with a readable filename (title + correct extension) rather than the raw technical ID.
+    - **Edit** (pencil icon, administrators only): opens a window with **Title**, **Artist**, **Genre** fields for every category, plus **Album**, **Year**, **Language**, **SACEM registry** only if the active category is "Musiques". **Cancel** / **Save** buttons.
+
+    ### 10.3 In case of a playback or download issue
+
+    If the server returns an unexpected response (JSON or an error page instead of the audio file), the message *"Le serveur a renvoyé une réponse inattendue (pas un fichier audio)."* ("The server returned an unexpected response — not an audio file.") appears — this usually signals a server-side technical issue, not a mistake on your part; try again, and if it persists, tell an administrator.
+
+    ### 10.4 Footer note
+
+    *"Connecté en tant que [your name]. Lecture et téléchargement passent par le cache S3 ; rien n'est stocké côté navigateur en dehors du fichier téléchargé."* ("Signed in as [your name]. Playback and download go through the S3 cache; nothing is stored on the browser side beyond the downloaded file.") — in other words, listening to a file here never saves anything on your computer; only an explicit click on "Télécharger" (Download) actually saves a file to your machine.
+
+    ---
+
+    ## 11. Music Validation (Validation musiques)
+
+    Route: `/dashboard/validation-musiques`. Access: **Administrators only.**
+
+    This is where **only music tracks** (the "Musiques" category) pass through for a first review after upload — the other categories (jingles, podcasts, ads, VOD, other) don't have this step and are usable right after upload.
+
+    ### 11.1 General behavior
+
+    - A search box (title, artist).
+    - One card per pending track, each with a built-in player (a Listen button in the header, which shows the audio player right below it).
+    - Each card's header shows: the title, the artist, the track's technical ID, and, if known, the cache page it's indexed under.
+    - Message if nothing is pending: *"Aucune piste à valider."* ("No track to validate.")
+    - Pagination controls at the bottom if the list is long.
+
+    ### 11.2 Editable fields on each card
+
+    - **Titre** (Title) (pre-filled with the uploaded value).
+    - **Artiste** (Artist).
+    - **Album** (optional at this stage — unlike upload, this field is not required to validate).
+    - **Genre** (dedicated picker, optional).
+    - **Année** (Year, optional, digits only).
+    - **Langue** (Language) (dropdown + custom field if "Autre"/"Other", optional).
+    - **Durée** (Duration): read-only.
+    - **Registre SACEM** (SACEM registry) (optional, with the same SACEM help links as on upload).
+    - **Point de départ (s)** / **Point de fin (s)** (Cue-in/out, optional at this stage).
+    - **Contenu explicite** (Explicit content) checkbox, **Contenu furry** (Furry content) checkbox.
+
+    > Contrary to what you might expect, validation **only requires Title and Artist** as mandatory fields — the others (album, genre, year, language, SACEM, cue points) can be left empty if you choose to validate without filling them in. Of course, it's recommended to check/complete them before validating, but the tool doesn't technically force you to, apart from Title/Artist.
+
+    ### 11.3 The two possible actions
+
+    - **"Valider"** (Validate) button (green check): saves the fields as shown on the card and marks the track as validated. It then immediately disappears from this list, and will now show up in Media Library and be selectable in Schedule and when adding to a playlist. Confirmation message: *"« [title] » validée."* ("« [title] » validated.")
+      - Checks before validation: Title and Artist not empty (*"Titre et artiste sont obligatoires avant validation."* — "Title and artist are required before validation."), Year/cue points numeric if provided, cue-out strictly greater than cue-in if both are provided.
+    - **"Refuser"** (Reject) button (red cross): asks for confirmation — *"Refuser et supprimer définitivement « [title] » ?"* ("Reject and permanently delete « [title] »?") — then, if confirmed, **deletes the file and its record forever**. This is **not** a simple "send back" or "set aside" action: the track is erased from the server. Confirmation message: *"« [title] » refusée et supprimée."* ("« [title] » rejected and deleted.")
+
+    ### 11.4 A technical detail worth knowing
+
+    Right after validating or rejecting a track, it might briefly reappear in the list if you refresh very quickly (the server's cache takes a few seconds to update) — the tool protects against this internally by hiding any track already processed during this session, but a full manual page refresh (F5) could briefly bring it back; this isn't an error, wait a few seconds and refresh again if needed.
+
+    ---
+
+    ## 12. Streamers (animators & live control)
+
+    Route: `/dashboard/streamers`. Access: Administrators, Streamers.
+
+    This page has up to three blocks depending on your role: the animator list (admin), your own profile (if you are yourself an animator), and live control (visible to everyone with access to the page).
+
+    ### 12.1 "Animateurs" (Animators) block (administrators only)
+
+    A table of every existing animator account, with these columns: **Identifiant** (Username), **Titre à l'antenne** (On-air title), **Dernier direct** (Last live session), **Secrets rotés le** (Secrets last rotated on). A red warning badge appears in front of the username of any **disabled** account.
+
+    Actions per row:
+    - **Éditer** (Edit): opens the full profile for editing.
+    - **Key icon**: opens the connection secrets window directly (see §12.4).
+    - **Direct** (Live): pre-selects this animator in the "Direct" panel further down the same page.
+
+    Note under the table: *"La liste ne porte pas les modes / l'état « désactivé » : ils s'affichent en ouvrant la fiche (qui renvoie aussi les secrets)."* ("The list doesn't carry the modes / the « disabled » state: they show up when opening the profile, which also returns the secrets.")
+
+    **"Nouvel animateur"** ("New animator") button opens a creation window:
+    - **Compte Cognito** (Cognito account): if accounts exist in the Streamers or Administrators group and aren't already animators, a dropdown offers them (with email and name if known); help text: *"L'identifiant animateur doit être exactement le nom d'utilisateur Cognito pour que l'animateur puisse gérer son propre direct."* ("The animator ID must be exactly the Cognito username for the animator to manage their own live session.") If no account is available (all already animators, or no account in these groups, or the list couldn't load), a free-text field appears instead, with the requirement: 32 characters max, letters/digits/hyphen/underscore only.
+    - **Modes autorisés** (Allowed modes): **SRT** and **RTMP** checkboxes (at least one must be checked).
+    - **Chiffrement SRT** (SRT encryption): dropdown (None, AES-128, AES-192, AES-256).
+    - **Fin de direct** (End of live): dropdown with four choices — *"Coupé à la fin du créneau"* ("Cut at the end of the slot"), *"5 min de rab puis coupé"* ("5 extra minutes then cut"), *"15 min de rab puis coupé"* ("15 extra minutes then cut"), *"Jamais coupé automatiquement"* ("Never automatically cut").
+    - **Titre à l'antenne** (On-air title) (optional).
+    - **"Autoriser un direct hors créneau"** ("Allow a live session outside the scheduled slot") checkbox.
+    - **"Compte désactivé"** ("Disabled account") checkbox.
+    - **Annuler** (Cancel) / **Enregistrer** (Save) buttons.
+
+    After creating or editing, a banner confirms: *"Animateur créé."* ("Animator created.") or *"Animateur mis à jour."* ("Animator updated.")
+
+    ### 12.2 "Ma fiche animateur" (My animator profile) block
+
+    Visible to **everyone**, including administrators (an administrator can be an animator themselves without necessarily having the Streamers group).
+
+    - If you have an animator profile: it shows your username, your allowed modes, your SRT encryption level, your end-of-live policy, whether you can broadcast outside your slot, and a clickable line "Secrets — changé le [date] — voir" ("Secrets — changed on [date] — view") that opens the secrets window.
+    - If you don't have one (and you're not an admin): *"Aucune fiche animateur rattachée à « [your name] ». Demande à un admin de la créer."* ("No animator profile linked to « [your name] ». Ask an admin to create one.")
+    - If access to your profile is explicitly denied (e.g. disabled account): the exact error message returned by the server is shown.
+
+    ### 12.3 "Direct" (Live) block
+
+    Constantly shows (refreshed every 5 seconds):
+    - **"À l'antenne : "** ("On air: ") the name of the animator currently live, or "— personne —" ("— nobody —"), with the note "(connecté)" ("(connected)") or "(pas encore connecté)" ("(not connected yet)").
+    - The **mode** (SRT or RTMP) and the encryption if SRT.
+    - If RTMP: the URL is split into two separately copyable lines — **"Serveur"** (Server) and **"Clé de flux"** (Stream key) (each with a **Copier** — Copy — button, which reads "Copié !" — "Copied!" — briefly after clicking) — this is the format expected by software like OBS.
+    - If SRT (or another URL format): a single copyable **"URL d'ingest"** (Ingest URL) line.
+    - The current animator's stream title and end-of-live policy, if known.
+    - If the streaming server itself reports a problem: a red banner with the exact technical message.
+
+    **Start/stop form** (visible if you're an admin, or if you have your own animator profile):
+    - **Animateur** (Animator): dropdown (admin) or a fixed field with your own name (non-admin).
+    - **Mode**: SRT or RTMP (the modes offered depend on what the chosen animator is allowed to use).
+    - **Chiffrement (session, non enregistré)** (Encryption, session-only, not saved): SRT mode only — lets you force a different encryption level than the one stored on the profile, just for this session, without changing the profile.
+    - **Titre à l'antenne (optionnel)** (On-air title, optional): if empty, the scheduled slot's title is used instead.
+    - **Forcer (couper l'autre)** (Force — cut the other one): checkbox, **administrators only** — lets you take over an ingest already opened by someone else.
+
+    Buttons: **Arrêter** (Stop, always visible) and **Démarrer / armer** (Start / arm, visible only if you have the right to act on this animator).
+
+    **An important technical distinction to know (stated in a footnote)**:
+    > *"SRT : l'ingest ne s'arme jamais en avance — il s'arme automatiquement 10 minutes avant le début du créneau, jamais avant. Rien à cliquer : « Démarrer » ne fait que récupérer l'URL déjà ouverte. RTMP : rien n'est pré-armé, il faut « Démarrer » soi-même. Ne relance pas si la réponse dit « déjà en place ». « connecté » faux juste après un démarrage n'est pas un échec."*
+    > ("SRT: the ingest never arms itself early — it arms automatically 10 minutes before the slot starts, never before. Nothing to click: « Start » only retrieves the already-open URL. RTMP: nothing is pre-armed, you have to « Start » it yourself. Don't re-trigger it if the response says « already in place ». « connected » being false right after a start is not a failure.")
+
+    In plain terms:
+    - In **SRT**, the system itself opens the connection 10 minutes before the slot's scheduled time — clicking "Démarrer / armer" then only **retrieves** the already-generated URL, you're not the one triggering the opening.
+    - In **RTMP**, nothing opens automatically: it's on you to click "Démarrer / armer" at the right moment.
+    - A *"Ingest déjà en place — ne relance pas le démarrage, l'URL existante est renvoyée"* ("Ingest already in place — don't re-trigger the start, the existing URL is returned") message is not an error — no need to click again.
+    - Seeing "(pas encore connecté)" or "connecté" showing false right after starting is **normal**: the actual connection (the streaming software actually plugging in) takes a few seconds.
+    - If the ingest is already held by someone else: *"Ingest déjà ouvert pour [name]."* ("Ingest already open for [name]."), followed by *"Coche « Forcer » pour reprendre l'antenne."* ("Check « Force » to take back the air.") (admin) or *"Un admin peut forcer."* ("An admin can force it.") (non-admin).
+
+    ### 12.4 The "Secrets" window
+
+    Opened from the key icon (admin list) or from "Ma fiche animateur".
+
+    - Permanent warning: *"Ne les partage pas, ne les mets pas dans une URL publique. Régénérer coupe la validité des URL d'ingest ; si l'animateur est à l'antenne, il faudra ré-armer son direct (force, admin)."* ("Don't share them, don't put them in a public URL. Regenerating invalidates the ingest URLs; if the animator is currently on air, an admin will need to re-arm their live session using force.")
+    - If the animator in question is **currently live**, an extra banner shows the URL (or Server+Key) **currently in use**, copyable — this is the only way to retrieve it if you've lost it while the live session is active.
+    - **Secret SRT** and **Secret RTMP**: shown read-only (clicking the field selects all its text to make copying easier), each with its own Copy button. Technical note at the bottom: *"Les secrets seuls ne suffisent pas à se connecter : l'URL complète (port compris) n'existe que pendant une session active — elle s'affiche ci-dessus quand [animator] est à l'antenne, ou dans le panneau « Direct » après un « Démarrer / armer »."* ("The secrets alone aren't enough to connect: the full URL (port included) only exists during an active session — it's shown above when [animator] is on air, or in the « Direct » panel after a « Start / arm ».")
+    - **"Fermer"** (Close) button.
+    - **"Régénérer"** (Regenerate) button (red, dangerous): rotates **both secrets at once**. There's only an implicit confirmation via the warning shown — **there is no second confirmation window**, only click it if you're sure. Once regenerated, the old credentials stop working **immediately**, even if the animator was mid-broadcast (an administrator will need to restart their live session using "Force").
+
+    ---
+
+    ## 13. Debug API
+
+    Route: `/dashboard/debug-api`. Access: **Administrators only.**
+
+    A **technical** tool, meant for support and diagnostics — not for everyday scheduling or editing work.
+
+    - Dozens of pre-built requests, grouped by area (public schedule, schedule admin, animators, live, users, media library, playlists, legacy cache/streaming), runnable one at a time.
+    - A button to run every GET/HEAD (read-only requests, so no risk) at once.
+    - A button to run **every** preset at once, including ones that **actually modify data** (creating a test animator, rotating secrets, deleting a music track) — a confirmation window shows before running, since this can have real, disruptive effects if used carelessly.
+    - A decoder for the current login token (JWT) and OIDC profile, to check what your account actually carries as information/groups.
+    - Automatic validation of certain responses against the expected data schemas, with details on what doesn't match if an issue is detected.
+    - A custom request builder (method, path, body, toggle authentication on/off) to test a specific call.
+
+    **Only use this page if you know what you're doing, or under a developer's guidance** — several actions here are genuinely destructive.
+
+    ---
+
+    ## 14. Cache (request log)
+
+    Route: `/dashboard/cache`. Access: **Administrators only.**
+
+    > This page's menu name ("Cache") is misleading: it does **not** show a cache management tool, but a **network request log** of the application's own calls.
+
+    - Each log row corresponds to a call the panel made to its own internal routes since you opened this page (or since the last clear): method, URL, response status, duration.
+    - Clicking a row expands it to show the full detail: request headers and body sent, response headers and body received. **Any authentication token is automatically masked**, it never appears in clear text here.
+    - A filter lets you narrow the display by method or URL.
+    - **"Vider le journal"** ("Clear log") button: erases the entire displayed history (deletes nothing server-side, just the local display).
+    - The log is **entirely local to this open page**: it starts from scratch every time you reload or close the page — it's never shared with anyone else nor stored anywhere.
+
+    **Typical use**: an administrator trying to understand why an action "isn't saving" can open this page, redo the problematic action elsewhere in another tab, then come back here to see exactly which request was sent and what the server answered.
+
+    ---
+
+    ## 15. Glossary
+
+    | Term | Meaning |
+    |---|---|
+    | **Animator** ("animateur") | A technical account carrying the connection credentials to broadcast live (distinct from a panel login account, even though it often shares the same name) |
+    | **Media library category** ("catégorie de médiathèque") | Music / Jingles / Podcasts / Ads / VOD / Other — determines where a file shows up and its required fields |
+    | **Slot** ("créneau") | A schedule entry: day/time, duration, content type, priority |
+    | **Live / ingest** ("direct" / "ingest") | The active technical connection while an animator is broadcasting live |
+    | **RTMP ingest** | One of the two supported live-broadcast protocols; credentials come as Server + Stream key |
+    | **SRT ingest** | The other supported protocol; arms itself automatically 10 minutes before a scheduled slot |
+    | **Priority** ("priorité") | A 0–100 number that determines which slot wins when times overlap |
+    | **Fallback** ("repli") | The playlist that plays when nothing is scheduled at a given moment |
+    | **SACEM** | The French copyright collection society — every music track must carry a reference to its registry |
+    | **Validated** ("validé") | The status of a music track confirmed by an administrator, the only condition for it to be usable in Schedule/Playlists/Media Library |
+    | **VOD / Rerun** ("VOD / Rediffusion") | The media library category for content meant to be replayed (show reruns) |
+
+    ---
+
+    ## 16. FAQ / Troubleshooting
+
+    **I uploaded a file but I don't see it in the list.**
+    Did you click "Actualiser" (Refresh) after uploading? The list never reloads itself after an upload.
+
+    **My uploaded track doesn't show up in Schedule / Playlists / Media Library.**
+    A music track must first be **validated** by an administrator (Music Validation page) before it's usable elsewhere. This only applies to the Music category — other categories are usable right after upload.
+
+    **I can't save my schedule, an "overlap" message appears.**
+    Two active slots have the exact same priority and overlap in time. Change one of their priorities, or disable one (uncheck "Actif").
+
+    **I saved my schedule but nothing changed on air.**
+    A save can take up to 30 minutes before the streaming server picks it up — that's normal, wait it out.
+
+    **The "Upload" button stays greyed out.**
+    At least one required field is missing on at least one queued file — the exact list of missing fields is shown under each affected file.
+
+    **I can't find the button to edit/delete a track.**
+    These buttons are only visible to administrator accounts. If your role is plain Radio Uploader, you'll never see them — that's not an error.
+
+    **I just started a live session but it shows "not connected yet".**
+    That's normal right after starting: the streaming software's actual connection takes a few seconds. If it persists more than a minute, check your streaming software's (OBS, etc.) configuration against the credentials shown in the "Secrets" window.
+
+    **A message says "Ingest already in place" when I try to start.**
+    That's not an error: the connection is already open, no need to click again. The already-active URL is simply given back to you.
+
+    **I lost my animator's connection credentials.**
+    If the live session is currently active, open the "Secrets" window: the URL currently in use is shown there and copyable. Otherwise, only an administrator can give them back to you (or regenerate them, which invalidates the old ones).
+
+    **I get a "session expired or unauthorized" error.**
+    Sign out then sign back in.
+
+    **I get a persistent "internal backend server error".**
+    This isn't something you can fix yourself — tell an administrator or developer, with the exact message shown.
+
+    **Why doesn't the "Cache" page show an actual cache?**
+    That's a known quirk of the tool: this page actually shows a network request log, useful for technical diagnostics. The menu name just hasn't been updated to match.

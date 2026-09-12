@@ -13,8 +13,8 @@ home:
 
     ## Parcours rapide
 
-    1. Lire les pre-requis
-    2. Recuperer ses identifiants de diffusion (serveur RTMP + passphrase unique)
+    1. Lire les pre-requis (ton mode SRT ou RTMP)
+    2. Recuperer ton lien de connexion depuis le panel
     3. Configurer OBS
     4. Lancer son stream
     5. Consulter le troubleshooting en cas de probleme
@@ -34,18 +34,19 @@ home:
     - [Configurer OBS](/fr/guides/configurer-obs/)
     - [Lancer son stream](/fr/guides/lancer-le-live/)
     - [Troubleshooting](/fr/troubleshooting/)
+    - [Panel d'administration (staff)](/fr/panel-admin/) — guide complet du panel `programmation.fluffradio.com` (médiathèque, playlists, programmations, validation, streamers...)
 
     ## Notes importantes
 
-    - Ne jamais partager sa passphrase de diffusion.
-    - Une passphrase est unique par streamer.
-    - En cas de rotation de passphrase, mettre a jour OBS immediatement.
+    - Ne jamais partager ses identifiants de diffusion (secrets/passphrase).
+    - Ces identifiants sont uniques par streamer et se recuperent exclusivement depuis le panel.
+    - En cas de regeneration des secrets par un administrateur, mettre a jour OBS immediatement.
     - Toujours tester avant un direct public, meme pour un changement mineur.
 
     ## Demarrage rapide (5 minutes)
 
     1. Verifier internet + audio + scene principale.
-    2. Configurer `Server` et `Stream Key` dans OBS.
+    2. Recuperer ton lien depuis le panel (automatique 10 min avant en SRT, ou "Demarrer / armer" en RTMP) et le configurer dans OBS.
     3. Lancer un test prive de 60 a 120 secondes.
     4. Verifier les stats OBS (debit stable, zero erreurs critiques).
     5. Demarrer le live.
@@ -78,112 +79,93 @@ prerequisites:
   body: |
     # Pre-requis
 
-    Avant de commencer la configuration OBS, verifier les points suivants.
+    Avant toute chose, deux notions a comprendre : le mode de diffusion de ton compte, et l'acces au panel d'administration (`programmation.fluffradio.com`). Tout le reste de ce wiki en decoule.
+
+    ## Les deux modes de diffusion
+
+    Fluff Radio supporte deux protocoles. Ton compte n'est autorise qu'a un ou plusieurs modes precis, configures par un administrateur.
+
+    - **SRT** (mode par defaut et recommande) : particularite essentielle a retenir, **ton lien de connexion s'ouvre tout seul, automatiquement, 10 minutes avant le debut de ton creneau programme**. Rien a demarrer manuellement.
+    - **RTMP** (mode de repli, pour un logiciel qui ne sait pas faire de SRT) : contrairement au SRT, rien ne s'ouvre automatiquement. C'est toi qui dois cliquer sur « Demarrer / armer » dans le panel au moment voulu.
+
+    Retiens cette regle simple :
+
+    > **SRT = automatique, 10 minutes avant. RTMP = manuel, tu cliques toi-meme.**
+
+    ## Acceder au panel
+
+    1. Ouvre `programmation.fluffradio.com`.
+    2. Clique sur « Se connecter », saisis ton identifiant et ton mot de passe.
+    3. Va dans le menu « Streamers » (barre de gauche). Si tu ne le vois pas, ton compte n'a pas encore le bon role — demande a un administrateur de te l'ajouter.
+
+    ## Ta fiche animateur
+
+    Sur la page « Streamers », un bloc « Ma fiche animateur » t'est reserve. Il affiche ton identifiant, tes modes autorises, ton niveau de chiffrement SRT, ta politique de fin de direct (voir [Lancer son stream](/fr/guides/lancer-le-live/)), et si tu peux diffuser hors creneau.
+
+    - Si ce bloc dit qu'aucune fiche n'est rattachee a ton compte : demande a un administrateur de t'en creer une. Sans elle, impossible de passer a l'antenne.
+    - Si l'acces est refuse : ton compte animateur existe mais a ete desactive. Contacte un administrateur.
 
     ## Materiel et connexion
 
     - Connexion internet stable (idealement ethernet)
-    - Debit montant suffisant pour le bitrate cible
-    - Micro fonctionnel
-    - Casque recommande pour eviter le larsen
+    - Micro fonctionnel, casque recommande pour eviter le larsen
+    - OBS Studio (ou logiciel equivalent supportant RTMP et/ou SRT selon ton mode), a jour
 
     ### Conseils pratiques
 
     - Eviter le Wi-Fi si possible pour reduire les pertes de paquets.
     - Fermer les applications qui consomment fortement le reseau pendant le live.
-    - Verifier la temperature machine si vous streamez depuis un laptop (risque de throttling).
+    - Redemarrer la machine avant un direct important ; eviter les mises a jour systeme juste avant.
 
-    ## Logiciels
+    ## Verification rapide avant un direct
 
-    - OBS Studio installe (version recente)
-    - Pilotes audio/video a jour
+    1. Ouvrir OBS, verifier que la scene principale est prete.
+    2. Verifier que le micro capte du son sans saturer.
+    3. Ouvrir la page « Streamers » du panel pour verifier ton mode et ton acces.
+    4. Si ton creneau approche (SRT), garder la page ouverte : le lien apparaitra tout seul 10 minutes avant.
 
-    ### Hygiene logicielle
-
-    - Redemarrer la machine avant un direct important.
-    - Eviter les mises a jour systeme juste avant un live.
-    - Conserver une version OBS stable pour tous les streamers (coherence support).
-
-    ## Informations necessaires
-
-    - URL du serveur RTMP
-    - Passphrase unique fournie pour votre compte streamer
-    - Parametres recommandes par Fluff Radio (bitrate, resolution, fps)
-
-    ### A valider avec l'equipe technique
-
-    - Limite maximale de bitrate autorisee.
-    - Profils encodeur recommandes selon type de machine.
-    - Exigences audio (frequence, canaux, niveau cible).
-
-    ## Verification rapide
-
-    1. Ouvrir OBS
-    2. Verifier que la scene principale est prete
-    3. Verifier que le micro capte du son
-    4. Verifier que les niveaux audio ne saturent pas
-
-    ## Check-list pre-live detaillee
-
-    1. Scene de secours preparee (ex: "pause" ou "probleme technique").
-    2. Source micro nommee clairement et testee.
-    3. Sources capture jeu/ecran verrouillees pour eviter un clic accidentel.
-    4. Monitoring audio actif pour verifier souffle, clipping ou bruit de fond.
-    5. Texte/titres sensibles verifies (pas d'infos privees).
-    6. Test de coupure/reprise internet connu (procedure d'urgence).
-
-    [Retour a l'accueil](/fr/)
+    [Etape suivante : recuperer ses identifiants](/fr/guides/identifiants-diffusion/)
 
 credentials:
   body: |
-    # Identifiants de diffusion
+    # Recuperer son lien de connexion
 
-    Chaque streamer dispose d'un couple:
+    Ce lien (ou tes identifiants Serveur + Cle) se recupere **exclusivement depuis le panel** (`programmation.fluffradio.com`, page « Streamers »), jamais par un autre canal.
 
-    - Serveur RTMP
-    - Passphrase unique
+    ## Cas 1 : tu es en SRT avec un creneau programme (le cas normal)
 
-    ## Format attendu
+    Rien a declencher toi-meme. A partir de 10 minutes avant l'heure de debut de ton creneau, le systeme ouvre automatiquement la connexion de son cote.
 
-    - Serveur: `rtmp://votre-serveur/live`
-    - Cle/passphrase: valeur secrete unique par streamer
+    1. Ouvre la page « Streamers » du panel a l'approche de ton creneau (ou avant, l'info se met a jour toute seule, rafraichie toutes les 5 secondes).
+    2. Dans le bloc « Direct », ton lien « URL d'ingest » est deja pret, avec un bouton « Copier ».
+    3. Cliquer sur « Demarrer / armer » a ce stade ne demarre rien de nouveau : ca ne fait que te redonner le lien deja ouvert. Tu peux cliquer sans crainte.
+    4. Copie ce lien dans ton logiciel de streaming (voir [Configurer OBS](/fr/guides/configurer-obs/)).
 
-    ## Difference entre stream key et passphrase
+    Si le bloc affiche encore « A l'antenne : — personne — » alors que tu es a moins de 10 minutes de ton creneau, patiente une minute et actualise la page.
 
-    - Dans OBS, le champ est souvent nomme `Stream Key`.
-    - Dans votre organisation, cette valeur peut etre geree comme une passphrase unique.
-    - Fonctionnellement, c'est la credentielle qui autorise la publication du flux.
+    ## Cas 2 : tu es en RTMP, ou tu veux diffuser hors creneau
+
+    Dans ces deux cas, rien ne s'ouvre automatiquement — c'est toi qui declenches la connexion, dans le bloc « Direct » de la page « Streamers » :
+
+    1. Le champ Animateur affiche deja ton nom (fixe).
+    2. Choisis le Mode (si plusieurs sont autorises pour ton compte).
+    3. Si SRT : tu peux forcer un niveau de chiffrement different pour cette seule session (non enregistre).
+    4. Renseigne un titre a l'antenne si tu veux (sinon, celui de ton creneau programme est utilise).
+    5. Clique sur « Demarrer / armer ».
+    6. Le lien (ou Serveur + Cle de flux) apparait dans le meme bloc.
+
+    Diffuser hors creneau n'est possible que si un administrateur a explicitement autorise ton compte a le faire. Si le bouton reste inactif, c'est probablement la raison.
+
+    Si un message dit « Ingest deja ouvert pour [quelqu'un d'autre] » : une autre personne diffuse deja. Un administrateur peut forcer la reprise si necessaire ; toi seul(e) ne peux pas.
 
     ## Bonnes pratiques de securite
 
-    - Ne pas envoyer la passphrase en public ou en chat.
-    - Ne pas afficher la fenetre OBS avec la cle visible en stream.
-    - Stocker la passphrase dans un espace prive (gestionnaire de mots de passe recommande).
-    - En cas de doute, demander une rotation de passphrase.
+    - Ne jamais partager ce lien, ni tes secrets, avec qui que ce soit.
+    - Ne jamais afficher la fenetre de configuration OBS avec le lien/la cle visible pendant un direct filme ou partage d'ecran.
+    - Le lien affiche dans le panel n'est valable que pendant une session active : perdu une fois la session terminee, il faut en recuperer un nouveau (armement automatique au prochain creneau, ou nouveau clic sur « Demarrer / armer »).
+    - En cas de doute sur une fuite de tes secrets, demande **immediatement** a un administrateur de les regenerer depuis la fenetre « Secrets » de ta fiche animateur. Une regeneration invalide immediatement les anciens identifiants ; si tu es en direct au moment de la regeneration, ta diffusion en cours n'est pas coupee physiquement, mais un administrateur devra ensuite relancer ton direct avec l'option « Forcer » pour te redonner un lien valable.
 
-    ## Validation apres saisie dans OBS
-
-    1. Verifier l'URL serveur caractere par caractere.
-    2. Verifier l'absence d'espace au debut/fin de passphrase.
-    3. Lancer un test court hors antenne.
-    4. Confirmer cote supervision que le bon compte streamer est detecte.
-
-    ## Rotation d'une passphrase
-
-    1. Contacter l'equipe technique
-    2. Recevoir une nouvelle passphrase
-    3. Mettre a jour OBS
-    4. Tester une diffusion privee
-
-    ## Signaux d'alerte securite
-
-    - Connexions inattendues sur votre canal de diffusion.
-    - Echec de connexion apres un partage accidentel de capture.
-    - Utilisation de votre passphrase sur un poste non autorise.
-
-    Dans ces cas, demandez une rotation immediate et invalidez l'ancienne credentielle.
-
-    [Etape suivante: Configurer OBS](/fr/guides/configurer-obs/)
+    [Etape suivante : Configurer OBS](/fr/guides/configurer-obs/)
 
 configure-obs:
   body: |
@@ -203,14 +185,25 @@ configure-obs:
 
     ## 2. Entrer les informations de diffusion
 
-    - `Server`: URL RTMP fournie
-    - `Stream Key` / `Cle`: passphrase unique fournie
+    Le format depend du mode de ton compte (voir [Pre-requis](/fr/guides/pre-requis/)) — les deux se recuperent depuis la page « Streamers » du panel, voir [Recuperer son lien de connexion](/fr/guides/identifiants-diffusion/).
+
+    ### En RTMP
+
+    L'information est scindee en deux parties separees et copiables independamment dans le panel :
+
+    - `Server` : colle la valeur « Serveur » affichee dans le panel.
+    - `Stream Key`: colle la valeur « Cle de flux » affichee dans le panel.
+
+    ### En SRT
+
+    Tu recois une URL complete unique (pas de separation Serveur/Cle) — colle-la telle quelle dans le champ de connexion SRT de ton logiciel (le champ exact depend de la version d'OBS ou du plugin SRT utilise).
 
     ### Bonnes pratiques de saisie
 
-    - Utiliser copier/coller depuis une source fiable.
+    - Utiliser copier/coller depuis le panel, jamais une valeur notee a la main.
     - Eviter les espaces ou retours a la ligne caches.
-    - Re-valider apres toute rotation de passphrase.
+    - Le lien n'est valable que pendant une session active : si tu le perds, retourne le chercher dans le panel plutot que d'en reutiliser un ancien.
+    - Re-valider apres toute regeneration de secrets par un administrateur.
 
     ## 3. Parametres de sortie recommandes (base)
 
@@ -290,8 +283,9 @@ go-live:
 
     - Scenes OBS pretes
     - Audio micro et audio desktop verifies
-    - URL RTMP et passphrase correctement renseignees
+    - Lien/identifiants correctement renseignes dans OBS (voir [Configurer OBS](/fr/guides/configurer-obs/))
     - Connexion internet stable
+    - Page « Streamers » du panel ouverte pour verifier ton statut
 
     ### Verifications de derniere minute
 
@@ -302,10 +296,9 @@ go-live:
 
     ## Lancement
 
-    1. Ouvrir OBS
-    2. Charger la scene du direct
-    3. Cliquer sur `Demarrer le stream`
-    4. Verifier le retour du serveur (pas d'erreur)
+    - **En SRT avec un creneau programme** : rien a « lancer » cote panel — ton lien s'est deja ouvert automatiquement 10 minutes avant (voir [Recuperer son lien de connexion](/fr/guides/identifiants-diffusion/)). Renseigne-le dans OBS puis clique simplement sur `Demarrer le stream` dans OBS.
+    - **En RTMP, ou hors creneau** : clique d'abord sur « Demarrer / armer » dans le panel pour obtenir ton lien, renseigne-le dans OBS, puis clique sur `Demarrer le stream` dans OBS.
+    - Dans les deux cas, verifier le retour du panel : le badge « A l'antenne » passe a « (connecte) » une fois la connexion reellement etablie. Voir « (pas encore connecte) » juste apres le lancement est normal, ca ne dure que quelques secondes.
 
     ## Pendant le live
 
@@ -327,11 +320,27 @@ go-live:
     3. Informer l'audience de la situation en restant clair.
     4. Noter l'heure exacte de l'incident pour faciliter l'analyse apres live.
 
-    ## Fin de live
+    ## Fin de creneau : ce qui se passe automatiquement
 
-    1. Cliquer sur `Arreter le stream`
-    2. Sauvegarder les modifications de scene si necessaire
-    3. Signaler tout incident technique pour suivi
+    Ta fiche animateur porte un reglage « Fin de direct », choisi par un administrateur, qui determine ce qui se passe si tu es encore en train de diffuser quand l'heure de fin de ton creneau programme arrive :
+
+    - **Coupe a la fin du creneau** : coupure automatique pile a l'heure prevue.
+    - **5 min de rab puis coupe** : 5 minutes de battement avant coupure automatique.
+    - **15 min de rab puis coupe** : 15 minutes de battement avant coupure automatique.
+    - **Jamais coupe automatiquement** : c'est a toi (ou a un administrateur) de terminer le direct manuellement.
+
+    Ce systeme ne coupe jamais un direct en cours sans raison : la coupure automatique n'intervient que pour un creneau reellement termine, jamais pour liberer l'antenne pendant que tu diffuses encore dans les temps.
+
+    ## Terminer son direct soi-meme
+
+    Que ce soit avant ou apres l'heure de fin prevue, tu peux couper ton propre direct a tout moment, sans condition liee au planning : va sur la page « Streamers », bloc « Direct », clique sur « Arreter ». Un message confirme « Direct coupe. » (ou « Rien n'etait ouvert. » si rien n'etait en cours — sans risque).
+
+    ## Fin de live (cote OBS)
+
+    1. Cliquer sur `Arreter le stream` dans OBS
+    2. Cliquer sur « Arreter » dans le panel (page Streamers) si ce n'est pas deja fait automatiquement par ta politique de fin de direct
+    3. Sauvegarder les modifications de scene si necessaire
+    4. Signaler tout incident technique pour suivi
 
     ## Post-live technique recommande
 
@@ -388,27 +397,49 @@ common-issues:
   body: |
     # Problemes courants
 
+    ## Je ne vois toujours pas de lien alors que mon creneau approche
+
+    - Verifie que ton compte est bien en mode **SRT** (le RTMP ne s'arme jamais automatiquement, il faut cliquer toi-meme sur « Demarrer / armer », voir [Recuperer son lien de connexion](/fr/guides/identifiants-diffusion/)).
+    - Si tu es bien en SRT, patiente : l'armement se fait pile a 10 minutes avant le debut, pas avant. Actualise la page « Streamers » du panel.
+
+    ## Un message dit que l'ingest est deja ouvert pour quelqu'un d'autre
+
+    Une autre personne diffuse deja en ce moment. Attends qu'elle ait termine, ou contacte un administrateur s'il y a une urgence justifiant de forcer la reprise (« Forcer » n'est disponible que pour les administrateurs).
+
+    ## Le panel affiche « pas encore connecte » alors que j'ai lance ma diffusion
+
+    Normal pendant quelques secondes le temps que la connexion s'etablisse techniquement. Si ca persiste plus d'une minute, verifie ta configuration OBS (mode, lien exact) ou contacte un administrateur.
+
+    ## J'ai perdu mon lien / mes identifiants ne fonctionnent plus
+
+    - Si ton direct est toujours actif, ouvre la fenetre « Secrets » depuis ta fiche animateur : l'URL en cours d'utilisation y est affichee et copiable.
+    - Sinon, seul un administrateur peut te redonner tes identifiants ou les regenerer. Une regeneration invalide immediatement les anciens.
+
+    ## Mon compte semble bloque / desactive
+
+    Contacte un administrateur : seul lui peut reactiver ton compte animateur.
+
     ## OBS n'arrive pas a se connecter au serveur
 
     Verifier:
 
-    - URL RTMP correcte
-    - Passphrase correcte (pas d'espace en trop)
+    - Le lien/les identifiants ont bien ete recuperes **depuis le panel** juste avant (pas une ancienne valeur reutilisee)
+    - Bon champ pour le bon mode : Serveur+Cle separes en RTMP, une seule URL en SRT (ne pas les melanger)
     - Connexion internet operationnelle
     - Pare-feu/antivirus qui bloque OBS
 
     Diagnostic complementaire:
 
-    - Verifier que le serveur RTMP cible est bien celui attendu (prod/test).
-    - Verifier que la passphrase n'a pas ete regeneree entre-temps.
+    - Verifier que le mode choisi dans OBS correspond au mode recupere dans le panel (SRT vs RTMP).
+    - Verifier que les secrets n'ont pas ete regeneres entre-temps par un administrateur.
     - Verifier que l'heure systeme est correcte.
 
     Actions:
 
-    1. Copier-coller a nouveau URL + passphrase
+    1. Retourner sur la page « Streamers » du panel et copier-coller a nouveau le lien/les identifiants
     2. Redemarrer OBS
     3. Tester depuis un autre reseau si possible
-    4. Demander verification cote serveur (authentification et tentative de connexion)
+    4. Contacter un administrateur si le probleme persiste
 
     ## Le stream freeze ou saccade
 
@@ -482,3 +513,739 @@ common-issues:
 
     [Retour au troubleshooting](/fr/troubleshooting/)
 
+
+admin-guide:
+  body: |
+    # Guide utilisateur complet — Panel d'administration FluffRadio
+
+    > Ce guide décrit **absolument tout** ce que l'on peut voir et faire dans le panel d'administration FluffRadio (`programmation.fluffradio.com`), champ par champ, bouton par bouton, message par message. L'objectif : que tu n'aies jamais besoin de demander « comment on fait ça ? » — si une question te vient en lisant, c'est qu'un chapitre manque, dis-le.
+
+    ## Sommaire
+
+    1. [Avant de commencer : les concepts clés](#1-avant-de-commencer--les-concepts-clés)
+    2. [Se connecter et se déconnecter](#2-se-connecter-et-se-déconnecter)
+    3. [La structure commune à toutes les pages](#3-la-structure-commune-à-toutes-les-pages)
+    4. [Qui a accès à quoi (rôles et groupes)](#4-qui-a-accès-à-quoi-rôles-et-groupes)
+    5. [Accueil](#5-accueil)
+    6. [Médiathèque](#6-médiathèque)
+    7. [Fichiers audio téléchargés](#7-fichiers-audio-téléchargés)
+    8. [Playlists](#8-playlists)
+    9. [Programmations](#9-programmations)
+    10. [Habillage d'antenne](#10-habillage-dantenne)
+    11. [Validation musiques](#11-validation-musiques)
+    12. [Streamers (animateurs et direct)](#12-streamers-animateurs-et-direct)
+    13. [Debug API](#13-debug-api)
+    14. [Cache (journal des requêtes)](#14-cache-journal-des-requêtes)
+    15. [Glossaire](#15-glossaire)
+    16. [Questions fréquentes / dépannage](#16-questions-fréquentes--dépannage)
+
+    ---
+
+    ## 1. Avant de commencer : les concepts clés
+
+    Quelques notions reviennent partout dans l'outil. Les comprendre une fois évite bien des questions ensuite.
+
+    - **Catégorie de médiathèque.** Chaque fichier audio (ou vidéo) appartient à exactement une catégorie : **Musiques**, **Jingles / habillage**, **Podcasts / préenregistrés**, **Promos / publicités**, **VOD / Rediffusions**, ou **Autres**. La catégorie détermine où le fichier apparaît, quels champs sont obligatoires à l'upload, et comment on le retrouve dans Programmations.
+    - **Validation.** Seule la catégorie **Musiques** passe par un circuit de validation (page « Validation musiques ») : un morceau uploadé n'est utilisable dans Programmations et visible en Médiathèque qu'une fois validé par un administrateur. Les autres catégories (jingles, podcasts, promos, VOD, autres) n'ont **pas** ce circuit — elles sont utilisables dès l'upload.
+    - **Créneau (slot).** Une case du planning de diffusion : un jour/heure, une durée, un type de contenu (playlist, direct, un fichier, une alternance), et une priorité.
+    - **Priorité.** Un nombre de 0 à 100 attaché à chaque créneau. Si deux créneaux se chevauchent dans le temps, celui avec la priorité la plus haute est diffusé. Deux créneaux actifs à la **même** priorité qui se chevauchent sont **interdits** — le système refuse de les enregistrer tant que tu ne changes pas l'un des deux.
+    - **Animateur.** Un compte technique séparé d'un compte de connexion au panel — il porte les identifiants de connexion (secrets) utilisés par un logiciel de streaming (OBS, etc.) pour émettre en direct. Un utilisateur humain peut être « lié » à un animateur du même nom.
+    - **Direct / ingest.** La connexion technique qu'un animateur ouvre pour diffuser en direct, en RTMP ou en SRT.
+    - **UTC / fuseau horaire.** En interne, toutes les heures sont stockées en temps universel (UTC). Le panel affiche et fait saisir les heures en **heure de Paris**, et convertit automatiquement — tu n'as jamais à faire cette conversion toi-même.
+
+    ---
+
+    ## 2. Se connecter et se déconnecter
+
+    ### Se connecter
+
+    1. Ouvre `programmation.fluffradio.com`. La page d'accueil publique s'affiche.
+    2. Clique sur **« Se connecter »**.
+    3. Tu es redirigé vers la page de connexion sécurisée (Cognito, le service d'identité utilisé par FluffRadio). Saisis ton identifiant et ton mot de passe.
+    4. Une fois connecté, tu es automatiquement ramené sur `/dashboard` (l'accueil du panel).
+
+    ### Cas particuliers à la connexion
+
+    - **Tu ouvres une page du panel sans être connecté** : au lieu du contenu de la page, tu vois un message « Vous n'êtes pas connecté » avec un bouton **« Se connecter »**.
+    - **Tu es connecté mais ton compte n'a pas le droit d'accéder à cette page précise** : tu vois **« Accès refusé — Votre groupe IAM ne permet pas d'accéder à cette page »**, avec un bouton **« Retour au dashboard »** qui t'amène vers la première page que ton compte peut effectivement consulter.
+    - **Erreur d'authentification** (rare, souvent un souci temporaire du service de connexion) : un message « Erreur d'authentification : [détail technique] » s'affiche à la place de la page. Réessaie de recharger ; si ça persiste, préviens un administrateur.
+
+    ### Se déconnecter
+
+    Clique sur **« Déconnexion »**, visible en haut à droite de la barre du tableau de bord sur n'importe quelle page. Tu es immédiatement déconnecté et renvoyé vers la page de connexion.
+
+    ---
+
+    ## 3. La structure commune à toutes les pages
+
+    Une fois connecté, chaque page du tableau de bord (`/dashboard/...`) partage exactement la même ossature :
+
+    - **Barre latérale gauche** :
+      - le logo FluffRadio ;
+      - une carte **« LIVE STREAM »** qui affiche en permanence ce qui joue actuellement à l'antenne (chargée depuis le serveur de diffusion, mise à jour automatiquement toutes les 5 secondes), avec un badge de couleur indiquant l'état :
+        - vert / « EN DIRECT » : quelqu'un diffuse en direct en ce moment ;
+        - une autre couleur / « READY » : le système est prêt mais rien de spécial en cours (lecture automatique normale) ;
+        - grisé / « HORS LIGNE » : le serveur de diffusion ne répond pas ;
+      - les liens de navigation — **tu ne vois que les pages auxquelles ton compte a accès** (voir chapitre 4). Si une page mentionnée dans ce guide n'apparaît pas dans ta barre latérale, ton compte n'y a simplement pas droit ; ce n'est pas un bug.
+    - **Barre du haut** : une étiquette « FluffRadio Admin », ton nom (ou ton email si aucun nom n'est renseigné sur ton compte), et le bouton **« Déconnexion »**.
+    - **Zone de contenu** : le titre de la page et son contenu propre, décrit chapitre par chapitre ci-dessous.
+
+    Un **fil d'ariane / titre de page** en haut de la zone de contenu te rappelle toujours où tu es.
+
+    ---
+
+    ## 4. Qui a accès à quoi (rôles et groupes)
+
+    Ton compte appartient à un ou plusieurs **groupes**, attribués par un administrateur. Ce sont ces groupes qui déterminent ce que tu vois :
+
+    | Groupe | Nom affiché dans ce guide |
+    |---|---|
+    | `admins` | Administrateurs — accès à tout, sans exception |
+    | `AccesMediatheque` | Accès Médiathèque |
+    | `GestionPlaylist` | Gestion Playlist |
+    | `ProgrammeursRadio` | Programmeurs Radio |
+    | `StaffRadio` | Staff Radio (rôle de base, donné à tout le monde) |
+    | `UploaderRadio` | Uploader Radio |
+    | `Streamers` | Streamers |
+    | `AccesAuxStatus` | Accès aux statuts |
+
+    ### Table complète des accès par page
+
+    | Page | Groupes qui y ont accès |
+    |---|---|
+    | Accueil | Tout le monde (StaffRadio suffit) |
+    | Médiathèque | Administrateurs, Accès Médiathèque |
+    | Fichiers audio téléchargés | Administrateurs, Uploader Radio |
+    | Playlists | Administrateurs, Gestion Playlist |
+    | Programmations | Administrateurs, Programmeurs Radio |
+    | Habillage d'antenne | Administrateurs, Programmeurs Radio, Streamers |
+    | Validation musiques | Administrateurs **uniquement** |
+    | Streamers | Administrateurs, Streamers |
+    | Debug API | Administrateurs **uniquement** |
+    | Cache | Administrateurs **uniquement** |
+
+    **Si ton compte n'a que le rôle de base** (Staff Radio, sans aucun autre groupe), la page Accueil affiche uniquement un message de bienvenue neutre, sans aucun widget ni contrôle — c'est normal, ce n'est pas une erreur de chargement.
+
+    **Un groupe spécial, « Accès aux statuts »**, donne uniquement le droit de voir le panneau de statut du serveur de diffusion sur la page d'accueil (version, mémoire, direct en cours…) en lecture seule, sans les autres widgets ni le bouton de contrôle (Skip) réservé aux administrateurs.
+
+    **Des vérifications plus fines existent à l'intérieur de certaines pages**, en plus de l'accès à la page elle-même : par exemple sur « Fichiers audio téléchargés », un compte Uploader Radio (non admin) peut uploader mais ne verra **jamais** les boutons Modifier/Supprimer, ni le menu de choix de catégorie — ces contrôles sont réservés aux administrateurs et n'apparaissent tout simplement pas à l'écran (ils ne sont pas grisés avec une explication, ils sont absents).
+
+    ---
+
+    ## 5. Accueil
+
+    Route : `/dashboard`.
+
+    ### Si ton compte n'a que le rôle de base
+
+    Tu vois uniquement : *« Bienvenue sur FluffRadio. Aucune section supplémentaire n'est associée à votre compte. »* Rien d'autre à faire sur cette page.
+
+    ### Si ton compte a un rôle plus complet
+
+    Tu vois, dans cet ordre :
+
+    **1. Une grille de raccourcis** (une carte par domaine) :
+    - **« Fichiers audio »** — *« Uploader, éditer et gérer la bibliothèque audio. »* — un bouton **+** t'amène directement sur la page Fichiers audio téléchargés.
+    - **« Playlists »** — si tes playlists sont en cours de chargement : *« Chargement des playlists... »* ; s'il n'y en a aucune : *« Organiser les séquences musicales de diffusion. »* ; sinon, une liste cliquable des **5 premières playlists** avec leur nombre de pistes entre parenthèses (ex. « Sélection du vendredi soir (12 pistes) ») — cliquer dessus t'amène directement sur cette playlist dans la page Playlists. Un bouton **+** amène vers la page Playlists en général.
+    - **« Programmations »** — *« Préparer les contenus à diffuser par créneau. »* — bouton **+** vers la page Programmations.
+    - **« Cache »** — *« Inspecter et mettre à jour le cache des données. »* — bouton **+** vers la page Cache.
+
+    **2. Le panneau de statut du serveur de diffusion** (visible aussi pour le groupe « Accès aux statuts ») — voir description détaillée au chapitre 12 (« AwooStatusPanel »), avec : version et temps de fonctionnement du serveur, statut du direct, piste en cours, un graphique de la mémoire utilisée sur les 5 dernières minutes, et (administrateurs uniquement) un bouton **« Passer »** pour sauter la piste automatique en cours.
+
+    **3. Un bandeau explicite** : *« Section legacy (Icecast/Liquidsoap) — nécessite `ICECAST_STATUS_URL` / `LIQUIDSOAP_STATUS_URL`, non configurées actuellement. »* — cela t'informe que la section qui suit affiche des **données de secours/simulées**, pas les vraies statistiques (le vrai statut du serveur de diffusion est le panneau au-dessus, pas celui-ci).
+
+    **4. Le panneau « Streaming Manager (Icecast + Liquidsoap) »** (legacy, à ignorer pour un usage courant) :
+    - un badge **« On Air »** / **« Off Air »** ;
+    - quatre boutons : **Start**, **Stop**, **Skip**, **Reload** — ils envoient une commande, mais tant que les variables techniques ci-dessus ne sont pas configurées, leur effet réel est limité/simulé ;
+    - un encart « lecture en cours » (piste, artiste, débit, pic d'auditeurs) ;
+    - des compteurs **Listeners** (auditeurs), **Bandwidth** (bande passante estimée), **Storage** (espace disque utilisé/total) ;
+    - une liste **« Recently played »** (dernières pistes) ;
+    - un graphique en barres **« Listeners trend »** (évolution du nombre d'auditeurs).
+
+    > En résumé : pour connaître le vrai statut de diffusion, regarde le panneau du haut (AwooStatusPanel/LIVE STREAM) ; le bloc du bas est un ancien tableau de bord technique qui n'est pas branché sur l'infrastructure actuelle.
+
+    ---
+
+    ## 6. Médiathèque
+
+    Route : `/dashboard/mediatheque`. Accès : Administrateurs, Accès Médiathèque.
+
+    Cette page sert **uniquement à consulter et écouter** le catalogue de musiques déjà validées — impossible d'uploader ou de modifier quoi que ce soit ici (pour ça, voir « Fichiers audio téléchargés » et « Validation musiques »).
+
+    ### Ce que tu vois
+
+    - Une barre de recherche.
+    - Un sélecteur **« Grouper par »** avec quatre choix : **Artiste**, **Album**, **Genre**, **Année**. Les morceaux sont organisés en groupes repliables/dépliables selon ce choix (chaque groupe a une petite flèche à cliquer pour l'ouvrir/fermer).
+    - Des filtres complémentaires (genre, langue).
+    - Chaque piste possède ses propres contrôles de lecture intégrés directement dans la liste (lecture/pause, précédent/suivant, volume), sans passer par une fenêtre séparée.
+    - Un badge **« E »** apparaît à côté du titre d'une piste marquée comme contenu explicite.
+
+    ### Ce que tu ne peux pas faire ici
+
+    Uploader un fichier, modifier des métadonnées, supprimer une piste : ces actions se font depuis « Fichiers audio téléchargés » (pour les admins et Uploader Radio) ou « Validation musiques » (admins).
+
+    ---
+
+    ## 7. Fichiers audio téléchargés
+
+    Route : `/dashboard/fichiers-audio`. Accès : Administrateurs, Uploader Radio.
+
+    Cette page a deux parties : un bloc d'upload en haut, et la liste du catalogue en dessous.
+
+    ### 7.1 Uploader un ou plusieurs fichiers
+
+    **Étape 1 — sélectionner les fichiers.** Zone de dépôt affichant *« Déposer des fichiers audio ici ou cliquer pour sélectionner »*, avec l'indication *« Sélection multiple · MP3, WAV, OGG, M4A, vidéo (podcasts) · max 25 fichiers »*. Tu peux :
+    - glisser-déposer un ou plusieurs fichiers directement dans la zone ;
+    - ou cliquer dessus pour ouvrir le sélecteur de fichiers de ton ordinateur (accepte les formats audio et vidéo).
+
+    Un compteur en bas de la zone t'indique combien de places restent (*« X/25 fichiers sélectionnés · Y places restantes »*), ou *« Limite atteinte : 25/25 fichiers sélectionnés »* si tu es au maximum. Si tu essaies d'en ajouter plus que la limite, un message apparaît : *« Limite atteinte : vous ne pouvez pas ajouter plus de 25 fichiers. »* (ou, si certains passent quand même : *« Limite atteinte : seuls les 25 premiers fichiers seront pris en compte. »*).
+
+    **Étape 2 — le règlement d'upload (obligatoire, une seule fois par navigateur).** La **toute première fois** que tu ouvres cette page (ou tant que tu n'as pas coché « se souvenir »), une fenêtre s'ouvre et **bloque tout le reste de la page** tant qu'elle est ouverte :
+    - Titre : *« Règlement d'upload des titres »*.
+    - Texte : *« Avant d'uploader des fichiers, merci de lire le règlement ci-dessous. Il détaille les règles à respecter pour les métadonnées, les droits et la qualité des titres soumis. »*
+    - Bouton **« Ouvrir le règlement (PDF) »** : ouvre le document PDF officiel dans un nouvel onglet.
+    - Tant que tu n'as pas cliqué sur ce bouton, tu vois : *« Ouvrez le règlement pour débloquer la case de confirmation ci-dessous. »* — et la case à cocher suivante reste **grisée, impossible à cocher**.
+    - Une fois le PDF ouvert (même si tu ne le lis pas jusqu'au bout), le message devient : *« ✓ Règlement ouvert : vous pouvez confirmer sa lecture ci-dessous. »*, et la case se débloque.
+    - Case à cocher 1 : **« J'ai bien lu et compris le règlement »** — doit être cochée pour continuer.
+    - Case à cocher 2 (optionnelle) : **« Se souvenir de mon choix et ne plus afficher ce message »** — si cochée, la fenêtre ne réapparaîtra plus sur ce navigateur (l'information est gardée localement sur ton ordinateur/navigateur, pas sur ton compte — si tu changes d'ordinateur ou de navigateur, elle réapparaîtra).
+    - Bouton **« Fermer »** : reste désactivé tant que la case 1 n'est pas cochée.
+
+    **Étape 3 — les champs de chaque fichier.** Pour chaque fichier ajouté, une carte apparaît avec :
+    - le nom du fichier et sa taille (en Ko ou Mo) ;
+    - un statut : « En attente », « Upload... » (avec un anneau de progression individuel), « Réussi » (coché vert), ou « Erreur » (croix rouge, avec le message d'erreur affiché juste en dessous) ;
+    - des champs pré-remplis automatiquement quand c'est possible :
+      - **Titre** et **Artiste** : devinés depuis les informations intégrées au fichier (tags ID3), ou sinon depuis le nom du fichier s'il est écrit sous la forme « Artiste - Titre.mp3 » (sinon, seul le nom de fichier sert de titre) ;
+      - **Album**, **Année**, **Genre** : devinés depuis les tags ID3 si présents ;
+      - **Point de départ** : toujours pré-rempli à `0` ;
+      - **Point de fin** : pré-rempli automatiquement à la durée totale détectée du fichier.
+    - **Champ Titre*** (obligatoire, pour tous types de fichiers).
+    - **Champ Artiste*** (obligatoire, pour tous types de fichiers).
+    - **Champ Catégorie** :
+      - Si tu es un compte **Uploader Radio simple** (non admin) : ce champ n'apparaît pas du tout, un champ figé affiche juste « Musiques » — tu ne peux uploader que des musiques.
+      - Si tu es **administrateur** (ou tout compte avec le droit de choisir la catégorie) : un menu déroulant propose **Musiques**, **Jingles / habillage**, **Podcasts / préenregistrés**, **Promos / publicités**, **VOD / Rediffusions**, **Autres**. Si tu choisis autre chose que « Musiques », une note apparaît : *« Rangé dans la médiathèque « [catégorie] », pas dans les musiques. »*
+    - **Champ Genre** : obligatoire (marqué d'une astérisque) uniquement si la catégorie est « Musiques » ; facultatif sinon (le label affiche alors « Genre (facultatif) »). Se remplit via un sélecteur de genre dédié (liste déroulante avec recherche parmi les genres normalisés, ou saisie libre pour un genre personnalisé).
+    - **Champ Album*** : n'apparaît **que** pour la catégorie « Musiques », et y est obligatoire.
+    - **Champ Année** : obligatoire pour « Musiques », facultatif sinon.
+    - **Champ Langue** : obligatoire pour « Musiques » (menu déroulant avec les langues normalisées ; si tu choisis « Autre », un champ texte libre apparaît pour préciser), facultatif sinon.
+    - **Champ Registre SACEM*** : n'apparaît **que** pour la catégorie « Musiques », et y est obligatoire. À côté du libellé, deux liens : **« Rechercher ce titre ↗ »** (ouvre une recherche pré-remplie sur le site de la SACEM à partir du titre et de l'artiste déjà saisis) et **« Répertoire SACEM ↗ »** (ouvre le répertoire général de la SACEM).
+    - Case à cocher **« Contenu explicite »** (toujours facultative, quelle que soit la catégorie).
+    - Case à cocher **« Contenu furry »** (toujours facultative, quelle que soit la catégorie — spécificité du site).
+    - **Champ Point de départ (s)*** et **Point de fin (s)*** : toujours obligatoires, en secondes, quelle que soit la catégorie.
+    - Si des champs obligatoires manquent pour ce fichier, un message rouge apparaît directement sous la carte : *« Champs obligatoires manquants : [liste des champs]. »*
+    - Un bouton **« Retirer »** (icône poubelle) permet d'enlever ce fichier de la liste avant l'upload (impossible pendant que l'upload de ce fichier est en cours).
+
+    **Étape 4 — lancer l'upload.** Le bouton **« Uploader N fichier(s) »** en bas :
+    - reste **désactivé** tant qu'au moins un fichier de la liste a un champ obligatoire manquant (un texte au survol du bouton l'indique : *« Complète tous les champs obligatoires avant d'uploader »*) ;
+    - pendant l'envoi, affiche *« Upload en cours... »* avec une icône animée, et une **barre de progression globale** (pourcentage, pondérée par la taille des fichiers) apparaît au-dessus de la liste.
+
+    **Étape 5 — après l'upload.** Une fois tous les fichiers envoyés avec succès, la liste se vide automatiquement et un message apparaît en haut de page : *« N fichier(s) uploadé(s). Cliquez sur « Actualiser » pour les afficher. »* — **l'upload ne rafraîchit pas automatiquement la liste du catalogue en dessous**, il faut cliquer explicitement sur le bouton **« Actualiser »**.
+
+    **Bouton « Vider »** : retire tous les fichiers actuellement dans la file d'attente (avant envoi), sans rien envoyer.
+
+    ### 7.2 Gérer le catalogue existant
+
+    En dessous du bloc d'upload :
+    - Une barre de recherche : *« Rechercher par titre ou artiste... »*.
+    - Un bouton **« Actualiser »** (avec une icône de rafraîchissement) recharge la liste complète depuis le serveur.
+    - Chaque piste affiche : une icône de note de musique, son titre, son artiste (« Artiste inconnu » si absent), sa durée, sa date d'upload.
+    - Boutons par piste :
+      - **Lecture / Stop** (icône ronde) : joue la piste directement dans un lecteur qui apparaît en haut de la liste, avec un bouton Stop dédié.
+      - **Modifier** (icône crayon, administrateurs uniquement) : ouvre une fenêtre de modification (voir ci-dessous).
+      - **Supprimer** (icône poubelle, administrateurs uniquement) : demande confirmation (*« Confirmer la suppression ? »*) puis supprime **définitivement** la piste.
+    - En bas : des contrôles de pagination (nombre de pistes par page, navigation).
+
+    ### 7.3 La fenêtre « Corriger les métadonnées »
+
+    Ouverte via le bouton Modifier (administrateurs uniquement). Contient :
+    - Un bouton de lecture/arrêt directement dans l'en-tête de la fenêtre.
+    - **Titre** (texte libre).
+    - **Artiste**.
+    - **Album** (facultatif).
+    - **Genre** (sélecteur dédié).
+    - **Année** (facultatif, uniquement des chiffres).
+    - **Durée** : affichée en lecture seule, non modifiable (calculée automatiquement depuis le fichier).
+    - **Langue** (menu déroulant + champ personnalisé si « Autre »).
+    - Case **Contenu explicite**, case **Contenu furry**.
+    - **Registre SACEM** (avec les mêmes liens d'aide que sur l'upload).
+    - **Point de départ (s)** et **Point de fin (s)**.
+    - L'identifiant technique de la piste est affiché en bas de la fenêtre (« ID : ... ») — utile si tu dois signaler un problème précis à un administrateur.
+    - Bouton **« Annuler »** : ferme sans rien enregistrer.
+    - Bouton **« Sauvegarder »** : reste désactivé tant qu'aucun champ n'a été réellement modifié ; en cas de succès, affiche *« Métadonnées mises à jour avec succès. »* et ferme la fenêtre.
+
+    **Validations appliquées avant sauvegarde** (un message rouge s'affiche et rien n'est envoyé si l'une échoue) :
+    - Année : doit être un nombre si renseignée (*« Année invalide : entrez une valeur numérique. »*).
+    - Point de départ / fin : doivent être des nombres (secondes), avec ou sans décimales (*« Point de départ invalide : entrez uniquement des chiffres (secondes, >= 0). »* / idem pour le point de fin).
+    - Le point de fin doit être strictement supérieur au point de départ (*« Le point de fin doit être supérieur au point de départ. »*).
+    - Ni l'un ni l'autre ne peut dépasser la durée réelle de la piste (*« Le point de fin ne peut pas dépasser la durée de la piste ([durée]). »*).
+    - Si aucun champ n'a changé : *« Aucune modification détectée. »* (le bouton Sauvegarder est de toute façon désactivé dans ce cas).
+
+    **Important** : modifier les métadonnées d'une piste **ne change jamais son statut de validation** — une piste déjà validée reste validée après modification par un administrateur (le statut est explicitement préservé en coulisses).
+
+    ### 7.4 Messages d'erreur possibles
+
+    Toutes les actions de cette page (chargement, upload, suppression, sauvegarde) peuvent afficher un message d'erreur explicite en cas de problème, sous cette forme générale : *« [Action] : [session expirée ou non autorisée / accès refusé / introuvable côté serveur / erreur interne du serveur backend] — [détail]. »* Si tu vois « session expirée ou non autorisée », déconnecte-toi puis reconnecte-toi ; pour les autres cas, contacte un administrateur si le problème persiste.
+
+    ---
+
+    ## 8. Playlists
+
+    Route : `/dashboard/playlists`. Accès : Administrateurs, Gestion Playlist.
+
+    ### 8.1 Vue d'ensemble de l'écran
+
+    L'écran est divisé en deux : une colonne de gauche (liste des playlists) et une zone principale à droite (contenu de la playlist sélectionnée).
+
+    ### 8.2 Colonne de gauche
+
+    - Titre **« Playlists »** avec un badge indiquant le nombre total.
+    - Bouton **rafraîchir** (icône) : recharge la liste des playlists **et** le catalogue de musiques disponibles.
+    - Bouton **+** : ouvre la fenêtre de création d'une nouvelle playlist.
+    - Une barre de recherche par nom (n'apparaît que s'il existe déjà au moins une playlist).
+    - La liste elle-même : chaque ligne affiche un avatar (première lettre du nom), le nom de la playlist, et son nombre de pistes. Un bouton **✕** sur chaque ligne (au survol) permet de la supprimer directement.
+    - États particuliers :
+      - Chargement en cours : *« Chargement... »*.
+      - Aucune playlist du tout : *« Aucune playlist »* + *« Clique sur + pour en créer une »*.
+      - Une recherche ne donne rien : *« Aucun résultat »* + *« Essaie un autre nom »*.
+
+    ### 8.3 Créer une playlist
+
+    Bouton **+** → fenêtre **« Nouvelle playlist »** :
+    - Champ **Nom** (obligatoire, exemple affiché : « Sélection du vendredi soir »). Valider avec la touche Entrée fonctionne aussi.
+    - Bouton **Annuler**.
+    - Bouton **Créer** (grisé tant que le nom est vide ; affiche « Création... » pendant l'opération).
+
+    La playlist créée apparaît immédiatement dans la liste, vide (0 piste).
+
+    ### 8.4 Supprimer une playlist
+
+    Clic sur le **✕** d'une ligne → fenêtre de confirmation : *« Supprimer « [nom] » ? »* avec le texte *« Cette action est irréversible : la playlist et son ordre de pistes seront définitivement supprimés. »* Boutons **Annuler** / **Supprimer** (affiche « Suppression... » pendant l'opération). Si la playlist supprimée était ouverte à l'écran, l'affichage revient à « Aucune playlist sélectionnée ».
+
+    ### 8.5 Consulter et modifier le contenu d'une playlist
+
+    En cliquant sur une playlist dans la liste de gauche, elle s'ouvre à droite avec :
+    - Son nom en titre, et en dessous : *« N piste(s) · durée totale »* (la durée totale est calculée et affichée sous forme « 1h 23m » ou « 4m 05s »).
+    - Bouton **« + Ajouter des musiques »** (voir §8.6).
+    - Un **indicateur d'enregistrement automatique**, à droite, qui change d'état tout seul :
+      - « ✓ Enregistré » (état normal/au repos) ;
+      - « Modifications en attente... » (tu viens de faire un changement, l'enregistrement va se déclencher dans un instant) ;
+      - « Enregistrement... » (envoi en cours) ;
+      - « Échec — réessayer » (l'enregistrement automatique a échoué ; **cliquer sur cet indicateur relance manuellement la sauvegarde**).
+    - La liste des pistes de la playlist, chacune avec :
+      - un champ numérique modifiable indiquant sa **position** (tu peux taper directement un nouveau numéro et appuyer sur Entrée ou cliquer ailleurs pour déplacer la piste à cette position) ;
+      - une poignée de **glisser-déposer** (icône à 6 points) pour réordonner à la souris ;
+      - le titre (avec un badge **« E »** si contenu explicite), l'artiste, le genre (badge), et une ligne supplémentaire avec album/langue/année si connus, et une autre ligne indiquant les points de repère (« ▶ 0:00 – 3:12 » par exemple) si définis ;
+      - la durée ;
+      - un bouton **✕** pour retirer la piste de la playlist (ne supprime pas la piste du catalogue général, juste de cette playlist).
+    - Si la playlist est vide : *« Cette playlist est vide »* + *« Ajoute des musiques pour commencer à construire l'ordre de diffusion »* + un bouton pour ajouter des musiques.
+    - Des contrôles de pagination en bas de la liste des pistes si elle est longue.
+
+    **Point important** : les modifications (ajout, retrait, réordonnancement) sont **enregistrées automatiquement** environ 1 seconde après ta dernière action (pas besoin de cliquer sur un bouton « Enregistrer » séparé). Si tu changes rapidement de playlist ou fermes l'onglet juste après un changement, attends de voir « Enregistré » pour être sûr que c'est bien pris en compte.
+
+    ### 8.6 Ajouter des musiques à une playlist
+
+    Bouton **« + Ajouter des musiques »** → une fenêtre plein écran s'ouvre : **« Ajouter des musiques à « [nom de la playlist] » »**.
+
+    **Outils de recherche et de filtre**, tous combinables :
+    - Barre de recherche texte (titre, artiste, album).
+    - Menu **« Tous les artistes »** → liste de tous les artistes présents dans le catalogue.
+    - Menu **« Tous les genres »** → liste de tous les genres présents.
+    - Menu **« Toutes les langues »**.
+    - Menu **« Tous les albums »**.
+    - Menu **« Explicite : indifférent »** → « Explicite seulement » ou « Non explicite seulement ».
+    - Plage **Année** : deux champs Min / Max.
+    - Plage **Durée (min)** : deux champs Min / Max, en minutes.
+    - Bouton **« Réinitialiser »** (n'apparaît que si au moins un filtre est actif) : remet tous les filtres à zéro d'un coup.
+
+    **Sélection et ajout** :
+    - Case **« Tout sélectionner (N) »** en haut : coche/décoche toutes les musiques **qui correspondent aux filtres actifs** (pas forcément toutes les musiques du catalogue si un filtre est en place).
+    - Chaque ligne de résultat a sa propre case à cocher, et un bouton **+** individuel à droite (coche verte si le morceau est déjà dans la playlist — le bouton devient alors désactivé avec l'infobulle « Déjà dans la playlist »).
+    - Bouton **« Ajouter à la playlist (N) »** : ajoute d'un coup toutes les musiques actuellement cochées.
+    - Note : seules les musiques **déjà validées par un administrateur** apparaissent dans cette liste (voir chapitre 11 « Validation musiques »).
+    - Tant que le contenu actuel de la playlist n'a pas fini de se charger, les boutons d'ajout restent désactivés avec l'infobulle *« Chargement de la playlist en cours... »* — patiente quelques instants.
+
+    Bouton **« Terminé (N piste(s)) »** en bas ferme la fenêtre (les ajouts sont déjà pris en compte, pas besoin de « valider » séparément).
+
+    ### 8.7 D'où vient l'auteur d'une playlist ?
+
+    Le champ « auteur » d'une playlist se remplit automatiquement avec ton adresse email (déduite de ton compte de connexion) — tu n'as rien à saisir toi-même.
+
+    ---
+
+    ## 9. Programmations
+
+    Route : `/dashboard/programmations`. Accès : Administrateurs, Programmeurs Radio.
+
+    C'est l'écran le plus complexe de l'outil : il construit le planning complet de diffusion de la radio.
+
+    ### 9.1 Vue d'ensemble
+
+    En haut de page :
+    - **Navigation par semaine** : flèches ◀ / ▶ pour changer de semaine, un libellé central « Semaine du [jour] [mois] », et un bouton **« Aujourd'hui »** qui n'apparaît que si tu n'es pas sur la semaine courante.
+    - **« Repli (aucun créneau) »** : un menu déroulant pour choisir la **playlist de secours**, celle qui joue automatiquement quand aucun créneau n'est programmé à un instant donné. Choix « — aucun — » possible (dans ce cas, silence si rien n'est programmé).
+    - Bouton **« Enregistrer »** (en haut à droite) : sauvegarde l'intégralité du planning affiché. Rien n'est envoyé au serveur tant que tu ne cliques pas dessus, **sauf** que chaque case du planning se met à jour dans ton navigateur immédiatement après validation d'un créneau (voir §9.3) — mais tant que tu n'as pas cliqué sur « Enregistrer », personne d'autre ne voit ces changements et un rechargement de page les perdrait.
+
+    Juste en dessous, un aperçu en direct :
+    - **« En ce moment »** : le titre et le contenu du créneau actuellement diffusé (avec sa priorité), ou « — rien — » si aucun créneau ne couvre l'instant présent.
+    - **« Ensuite »** : le titre du prochain créneau et son heure de début, ou « — rien — ».
+
+    ### 9.2 La grille hebdomadaire
+
+    Une grille à 7 colonnes (Lundi à Dimanche) et 24 lignes d'heures (00:00 à 23:00, subdivisées par demi-heure).
+
+    - **Cliquer sur une case vide** ouvre la fenêtre de création d'un nouveau créneau, pré-rempli avec le jour et l'heure de cette case.
+    - **Cliquer sur un bloc coloré déjà présent** ouvre ce créneau en modification.
+    - Chaque bloc affiche : ses horaires (« 14:00–16:00 »), sa priorité (« · P50 »), une petite icône représentant son type, et son titre.
+    - Un créneau **désactivé** (voir §9.3, case « Actif ») apparaît visuellement grisé/estompé dans la grille, mais reste cliquable pour modification.
+    - Si deux créneaux de priorités différentes se chevauchent visuellement, celui de priorité la plus haute s'affiche par-dessus l'autre.
+
+    ### 9.3 Créer ou modifier un créneau — tous les champs en détail
+
+    **Type de créneau** — menu déroulant avec 7 choix, chacun pré-remplissant une priorité par défaut et déterminant les champs suivants :
+
+    | Type de créneau | Priorité par défaut | Ce que tu choisis ensuite |
+    |---|---|---|
+    | Playlist | 1 | une playlist |
+    | Playlist alternée | 1 | deux sources ou plus qui alternent |
+    | Émission — direct | 50 | un animateur |
+    | Émission — préenregistrée | 50 | un seul fichier de la catégorie « Podcasts » |
+    | Habillage / virgule | 25 | un seul fichier de la catégorie « Jingles » |
+    | Promotion | 75 | un seul fichier de la catégorie « Promos » |
+    | VOD / Rediffusion | 50 | un seul fichier de la catégorie « VOD » |
+
+    Changer le type recalcule automatiquement la priorité par défaut (tu peux toujours l'ajuster ensuite) et vide les champs de contenu déjà choisis s'ils ne correspondent plus.
+
+    **Priorité** — curseur de 0 à 100, avec la valeur actuelle affichée entre parenthèses et un rappel de la valeur par défaut du type choisi. Texte d'aide affiché en permanence : *« Priorité plus haute = passe devant en cas de chevauchement. Deux créneaux actifs de même priorité qui se chevauchent sont refusés à l'enregistrement. »*
+
+    **Titre** — champ texte, obligatoire.
+
+    **Récurrence** — trois choix possibles :
+    - **Toutes les semaines** : le créneau revient chaque semaine, sur les jours cochés ci-dessous.
+    - **Une semaine sur N** : demande un champ supplémentaire **« Une semaine sur »** (nombre entre 2 et 8), et un champ **« Semaine de référence (première diffusion) »** (une date). Le cycle est compté à partir du **lundi de la semaine que tu choisis comme référence** — texte d'aide : *« Le cycle est compté à partir du lundi de cette semaine, comme le serveur de diffusion — pas de notion de semaine « paire / impaire ». »*
+    - **Ponctuel (une date)** : un seul champ **Date** apparaît ; pas de jours de la semaine à cocher ; ce créneau ne se reproduit jamais et apparaît dans la liste séparée « Événements ponctuels » (§9.7).
+
+    **Jours** (récurrent uniquement) — cases à cocher Lundi à Dimanche, au moins une doit être cochée.
+
+    **Début** / **Fin** — deux sélecteurs d'heure. Texte d'aide affiché en permanence : *« L'heure de fin est la fenêtre du créneau, pas une coupure : le changement se fait à la fin du morceau en cours. »* — et, sauf pour un direct : *« « Max boucles » renseigné = travail dû, rattrapé s'il démarre en retard ; vide = remplissage, abandonné à la fin de la fenêtre. »*
+
+    **Champs spécifiques selon le type choisi :**
+
+    - **Type « Playlist »** :
+      - menu **Playlist** (obligatoire) ;
+      - case **« Lecture aléatoire »** ;
+      - champ **« Max boucles (optionnel) »** : nombre entier ≥ 1. Vide = la playlist joue en boucle indéfiniment tant que la fenêtre horaire n'est pas finie (du remplissage, sacrifiable). Une valeur = un nombre de tours précis à faire (du contenu jugé important, rattrapé même en cas de retard de démarrage).
+
+    - **Type « Émission — direct »** :
+      - menu **Animateur** (obligatoire) — si la liste est vide, message : *« Aucun animateur chargé — crée-les dans « Streamers & direct ». »*
+      - Texte d'aide permanent : *« Un créneau direct ne joue aucun média : laisser une playlist de fond en dessous n'est pas un conflit, c'est le filet si le direct ne démarre pas. »* — c'est-à-dire qu'il est normal et recommandé de superposer une playlist à priorité plus basse sous chaque créneau de direct, pour que quelque chose joue automatiquement si l'animateur ne se connecte pas.
+
+    - **Types média (Émission préenregistrée, Habillage, Promotion, VOD)** :
+      - un menu **« Catégorie de médiathèque »** est affiché mais **déjà pré-rempli et cohérent avec le type choisi** (tu peux le changer, mais ce n'est en général pas nécessaire) ;
+      - **un seul fichier** à choisir (pas de liste) : une zone de recherche affiche les résultats sous forme de lignes cliquables (titre, artiste, genre, durée) — cliquer sur une ligne sélectionne ce fichier ;
+      - **choisir un fichier recalcule automatiquement l'heure de fin** du créneau, pour qu'elle corresponde exactement à la durée réelle du fichier (l'heure de début ne bouge pas, seule la fin s'ajuste) ;
+      - si la catégorie choisie est « Musiques », une note précise : *« seules les pistes validées par un admin sont proposées »* ;
+      - une fois choisi, le nom du fichier sélectionné s'affiche sous le sélecteur ;
+      - champ **« Max boucles (optionnel) »** disponible aussi ici.
+
+    - **Type « Playlist alternée »** :
+      - Texte d'aide : *« Au moins deux sources. À chaque tour, la playlist joue « [nombre] » éléments puis on passe à la suivante. Chaque source garde sa position et son budget de boucles ; l'ensemble n'est rattrapable que si toutes les sources ont un « Max boucles ». »*
+      - Chaque **source** (au moins 2, tu peux en ajouter d'autres) a :
+        - un type : **Playlist** ou **Liste d'audios** ;
+        - **« Nombre joué d'affilée »** : combien d'éléments de cette source jouent avant de passer à la source suivante (par exemple : 3 musiques, puis 1 jingle, puis retour à 3 musiques...) ;
+        - si type Playlist : un sélecteur de playlist ;
+        - si type Liste d'audios : un sélecteur de catégorie de médiathèque, puis une recherche multi-sélection (tu peux ajouter plusieurs fichiers à cette source, chacun listé avec un **✕** pour le retirer) ;
+        - case **« Lecture aléatoire »** ;
+        - champ **« Max boucles (optionnel) »** ;
+        - un bouton **« Retirer »** apparaît sur chaque source dès qu'il y en a plus de 2 (impossible de descendre en dessous de 2 sources).
+      - Bouton **« + Ajouter une source »** pour en ajouter d'autres.
+
+    **Description** — champ texte libre, facultatif, multi-lignes.
+
+    **Case « Actif »** — décochée, le créneau reste enregistré mais n'est jamais diffusé (utile pour préparer un créneau à l'avance, ou suspendre temporairement une émission sans la supprimer).
+
+    **Boutons du bas de la fenêtre :**
+    - **« Supprimer »** (uniquement si tu modifies un créneau existant, pas pour une création) : retire immédiatement ce créneau du planning affiché (à confirmer ensuite en cliquant sur « Enregistrer » en haut de la page pour que ce soit définitif).
+    - **« Annuler »** : ferme la fenêtre sans rien garder.
+    - **« Valider »** : vérifie et applique tes changements **dans l'affichage local** (pas encore envoyé au serveur — il faut ensuite cliquer sur « Enregistrer » en haut de la page).
+
+    ### 9.4 Ce qui bloque la validation d'un créneau (messages d'erreur)
+
+    Avant même d'envoyer quoi que ce soit au serveur, en cliquant sur **« Valider »** :
+    - *« Le titre est requis. »*
+    - *« Choisis au moins un jour. »* (récurrent sans aucun jour coché)
+    - *« La fin doit être après le début. »*
+    - *« Choisis une playlist. »* (type Playlist sans playlist choisie)
+    - *« Choisis un animateur. »* (type Direct sans animateur choisi)
+    - *« Ajoute au moins un audio. »* (type média sans fichier choisi)
+    - *« Une alternance demande au moins deux sources. »*
+    - *« Chaque source « playlist » doit désigner une playlist. »*
+    - *« Chaque source « audios » doit contenir au moins un audio. »*
+    - *« « Nombre joué d'affilée » doit être au moins 1. »*
+    - Si, après validation, ton créneau (actif) chevauche dans le temps un autre créneau actif de la **même priorité exacte** : *« Chevauchement avec un créneau de priorité [N] : [titres des créneaux en conflit]. Donne-leur des priorités différentes (la plus haute gagne). »* — la validation est bloquée tant que ce n'est pas résolu (change la priorité de l'un des deux créneaux, ou désactive-en un).
+
+    ### 9.5 Enregistrer le planning complet
+
+    Cliquer sur **« Enregistrer »** en haut de page déclenche plusieurs vérifications, dans l'ordre :
+
+    1. **Recherche de tout chevauchement de même priorité** dans l'ensemble du planning (pas seulement le créneau que tu viens de modifier) — si un conflit existe n'importe où, l'enregistrement est refusé avec le message *« Des créneaux actifs de même priorité se chevauchent — le backend les refusera. Donne des priorités distinctes. »* et une liste détaillée des paires en conflit apparaît en dessous.
+    2. **Validation de forme** de tout le document — en cas de souci technique (rare), *« La programmation ne respecte pas le format attendu — rien n'a été envoyé. »* avec le détail.
+    3. **Envoi au serveur.** Réponses possibles :
+       - Succès : *« Programmation enregistrée. Elle sera prise en compte à l'antenne dans les 30 minutes au plus. »* — **retiens bien ce délai : un changement enregistré n'est jamais instantané sur l'antenne**, il peut mettre jusqu'à une demi-heure à être pris en compte par le serveur de diffusion.
+       - **Conflit de version** (quelqu'un d'autre a enregistré entre-temps) : *« Conflit : la programmation a été modifiée entre-temps (v...). Rechargement... »* — la page recharge automatiquement la dernière version ; **tes modifications non enregistrées depuis ce rechargement sont perdues**, il faut les refaire après le rechargement.
+       - **Droit insuffisant** : *« Ton compte n'a pas le droit de modifier la programmation. »*
+       - Autre erreur : le message renvoyé par le serveur, avec le détail des champs en cause si disponible.
+
+    ### 9.6 Un message qui peut apparaître au chargement de la page
+
+    *« N créneau(x) récurrent(s) recalé(s) sur une ancre cohérente (ancien modèle « semaine paire/impaire »). Enregistre pour figer. »* — cela signifie que d'anciens créneaux, créés avec un système de récurrence différent (aujourd'hui abandonné), ont été automatiquement réinterprétés de façon équivalente. **Clique sur « Enregistrer » pour que cette réinterprétation devienne définitive** ; sinon, elle sera recalculée à chaque chargement de page (sans conséquence pratique tant que tu n'as touché à rien, mais mieux vaut figer).
+
+    Si la programmation ne peut pas du tout être chargée depuis le serveur : *« Programmation indisponible ([détail]) — brouillon local, l'enregistrement échouera. »* — tu peux quand même consulter/préparer des créneaux dans cet état, mais rien ne pourra être sauvegardé tant que la connexion au serveur n'est pas rétablie.
+
+    ### 9.7 Les listes en bas de page
+
+    - **« Événements ponctuels (N) »** : uniquement les créneaux à date unique (non récurrents), triés par date. Un bouton **« + Ponctuel »** en crée un nouveau directement.
+    - **« Tous les créneaux (N) »** : l'intégralité des créneaux, avec une barre de recherche (« Rechercher (titre, playlist, animateur…) »), triés par priorité décroissante puis par titre. Chaque ligne affiche : le type de récurrence en texte, les horaires, une icône représentant le type, le titre, une description du contenu (nom de playlist / animateur / fichier(s)), et la priorité. Cliquer sur une ligne ouvre ce créneau en modification (identique à cliquer sur son bloc dans la grille).
+
+    ### 9.8 Pied de page
+
+    Un rappel discret en bas de l'écran : *« Connecté en tant que [ton nom] — heures affichées en Europe/Paris, converties en UTC à l'enregistrement · version [n° de version] »*.
+
+    ---
+
+    ## 10. Habillage d'antenne
+
+    Route : `/dashboard/habillage-antenne`. Accès : Administrateurs, Programmeurs Radio, Streamers.
+
+    Cette page permet de parcourir, écouter, télécharger et (pour les administrateurs) modifier tous les fichiers de la médiathèque **en dehors du flux d'upload principal des Musiques** — bien qu'elle donne aussi accès à la catégorie Musiques par commodité.
+
+    ### 10.1 Structure de l'écran
+
+    - Une rangée d'onglets, un par catégorie : **Musiques**, **Jingles / habillage**, **Podcasts / préenregistrés**, **Promos / publicités**, **VOD / Rediffusions**, **Autres**. L'onglet ouvert par défaut est « Jingles / habillage ».
+    - Une barre de recherche (titre, artiste, genre).
+    - Un tableau avec, par ligne : des boutons d'action (Écouter, Télécharger, et Modifier pour les admins), le titre, l'artiste, le genre.
+    - Si un onglet n'a jamais été ouvert, son contenu se charge la première fois que tu cliques dessus (pas tout chargé d'avance).
+    - Message si la catégorie est vide : *« Aucun élément dans cette catégorie (ou endpoint indisponible). »*
+    - Message si une recherche ne donne rien mais que la catégorie contient des éléments : *« Aucun élément. »*
+
+    ### 10.2 Actions par ligne
+
+    - **Écouter** (icône lecture/stop) : lance la lecture. Un lecteur apparaît, **collé en bas de l'écran** (visible même en faisant défiler la page), avec le titre/artiste de la piste en cours et les contrôles audio standards du navigateur. Cliquer à nouveau sur le bouton de la même ligne l'arrête.
+    - **Télécharger** : télécharge le fichier sur ton ordinateur, avec un nom de fichier lisible (titre + bonne extension) plutôt que l'identifiant technique brut.
+    - **Modifier** (icône crayon, administrateurs uniquement) : ouvre une fenêtre avec les champs **Titre**, **Artiste**, **Genre** pour toutes les catégories, plus **Album**, **Année**, **Langue**, **Registre SACEM** uniquement si la catégorie active est « Musiques ». Boutons **Annuler** / **Enregistrer**.
+
+    ### 10.3 En cas de problème de lecture ou de téléchargement
+
+    Si le serveur renvoie une réponse inattendue (JSON ou page d'erreur au lieu du fichier audio), le message *« Le serveur a renvoyé une réponse inattendue (pas un fichier audio). »* s'affiche — cela signale généralement un souci technique côté serveur, pas une erreur de ta part ; réessaie, et si ça persiste, préviens un administrateur.
+
+    ### 10.4 Note de bas de page
+
+    *« Connecté en tant que [ton nom]. Lecture et téléchargement passent par le cache S3 ; rien n'est stocké côté navigateur en dehors du fichier téléchargé. »* — autrement dit, écouter un fichier ici ne le sauvegarde nulle part sur ton ordinateur ; seul un clic explicite sur « Télécharger » enregistre réellement un fichier chez toi.
+
+    ---
+
+    ## 11. Validation musiques
+
+    Route : `/dashboard/validation-musiques`. Accès : **Administrateurs uniquement.**
+
+    C'est ici que passent **exclusivement les musiques** (catégorie « Musiques ») en attente d'un premier examen après upload — les autres catégories (jingles, podcasts, promos, VOD, autres) n'ont pas cette étape et sont utilisables immédiatement après upload.
+
+    ### 11.1 Fonctionnement général
+
+    - Une barre de recherche (titre, artiste).
+    - Une fiche par piste en attente, chacune avec un lecteur intégré (bouton Écouter dans l'en-tête, qui affiche le lecteur audio juste en dessous).
+    - L'en-tête de chaque fiche affiche : le titre, l'artiste, l'identifiant technique de la piste, et éventuellement la page de cache où elle est indexée.
+    - Message si aucune piste n'est en attente : *« Aucune piste à valider. »*
+    - Contrôles de pagination en bas si la liste est longue.
+
+    ### 11.2 Les champs modifiables sur chaque fiche
+
+    - **Titre** (pré-rempli avec la valeur uploadée).
+    - **Artiste**.
+    - **Album** (facultatif à ce stade — contrairement à l'upload, ce champ n'est pas obligatoire pour valider).
+    - **Genre** (sélecteur dédié, facultatif).
+    - **Année** (facultatif, chiffres uniquement).
+    - **Langue** (menu déroulant + champ personnalisé si « Autre », facultatif).
+    - **Durée** : lecture seule.
+    - **Registre SACEM** (facultatif, avec les mêmes liens d'aide SACEM que sur l'upload).
+    - **Point de départ (s)** / **Point de fin (s)** (facultatifs à ce stade).
+    - Case **Contenu explicite**, case **Contenu furry**.
+
+    > Contrairement à ce qu'on pourrait penser, la validation **n'exige que le Titre et l'Artiste** comme champs obligatoires — les autres (album, genre, année, langue, SACEM, points de repère) peuvent être laissés vides si tu choisis de valider sans les compléter. Bien sûr, il est recommandé de les vérifier/compléter avant de valider, mais l'outil ne t'y oblige pas techniquement, hormis Titre/Artiste.
+
+    ### 11.3 Les deux actions possibles
+
+    - **Bouton « Valider »** (coche verte) : enregistre les champs tels qu'affichés sur la fiche et marque la piste comme validée. Elle disparaît alors immédiatement de cette liste, et apparaîtra désormais dans Médiathèque et sera sélectionnable dans Programmations et lors de l'ajout à une playlist. Message de confirmation : *« « [titre] » validée. »*
+      - Vérifications avant validation : Titre et Artiste non vides (*« Titre et artiste sont obligatoires avant validation. »*), Année/points de repère numériques si renseignés, point de fin strictement supérieur au point de départ si les deux sont renseignés.
+    - **Bouton « Refuser »** (croix rouge) : demande confirmation — *« Refuser et supprimer définitivement « [titre] » ? »* — puis, si confirmé, **supprime le fichier et sa fiche pour toujours**. Ce n'est **pas** un simple retour à l'expéditeur ni une mise de côté : la piste est effacée du serveur. Message de confirmation : *« « [titre] » refusée et supprimée. »*
+
+    ### 11.4 Un détail technique à connaître
+
+    Juste après avoir validé ou refusé une piste, il se peut qu'elle réapparaisse brièvement dans la liste si tu rafraîchis très vite (le cache du serveur met quelques secondes à se mettre à jour) — l'outil s'en protège en interne en masquant toute piste déjà traitée pendant cette session, mais un rafraîchissement manuel complet de la page (F5) pourrait la faire réapparaître un court instant ; ce n'est pas une erreur, patiente quelques secondes et réactualise à nouveau si besoin.
+
+    ---
+
+    ## 12. Streamers (animateurs et direct)
+
+    Route : `/dashboard/streamers`. Accès : Administrateurs, Streamers.
+
+    Cette page a jusqu'à trois blocs, selon ton rôle : la liste des animateurs (admin), ta propre fiche (si tu es toi-même animateur), et le contrôle du direct (visible par tous ceux qui ont accès à la page).
+
+    ### 12.1 Bloc « Animateurs » (administrateurs uniquement)
+
+    Un tableau de tous les comptes animateurs existants, avec ces colonnes : **Identifiant**, **Titre à l'antenne**, **Dernier direct**, **Secrets rotés le**. Un badge d'alerte rouge apparaît devant l'identifiant de tout compte **désactivé**.
+
+    Actions par ligne :
+    - **Éditer** : ouvre la fiche complète en modification.
+    - **Icône clé** : ouvre directement la fenêtre des secrets de connexion (voir §12.4).
+    - **Direct** : présélectionne cet animateur dans le panneau « Direct » plus bas sur la même page.
+
+    Note en bas du tableau : *« La liste ne porte pas les modes / l'état « désactivé » : ils s'affichent en ouvrant la fiche (qui renvoie aussi les secrets). »*
+
+    **Bouton « Nouvel animateur »** ouvre une fenêtre de création :
+    - **Compte Cognito** : si des comptes existent dans le groupe Streamers ou Administrateurs et ne sont pas déjà des animateurs, un menu déroulant les propose (avec email et nom si connus) ; texte d'aide : *« L'identifiant animateur doit être exactement le nom d'utilisateur Cognito pour que l'animateur puisse gérer son propre direct. »* Si aucun compte disponible (tous déjà animateurs, ou aucun compte dans ces groupes, ou impossible de charger la liste), un champ texte libre apparaît à la place, avec l'exigence : 32 caractères maximum, lettres/chiffres/tiret/underscore uniquement.
+    - **Modes autorisés** : cases à cocher **SRT** et **RTMP** (au moins un doit être coché).
+    - **Chiffrement SRT** : menu déroulant (None, AES-128, AES-192, AES-256).
+    - **Fin de direct** : menu déroulant avec quatre choix — *« Coupé à la fin du créneau »*, *« 5 min de rab puis coupé »*, *« 15 min de rab puis coupé »*, *« Jamais coupé automatiquement »*.
+    - **Titre à l'antenne** (facultatif).
+    - Case **« Autoriser un direct hors créneau »**.
+    - Case **« Compte désactivé »**.
+    - Boutons **Annuler** / **Enregistrer**.
+
+    Après création ou modification, un bandeau confirme : *« Animateur créé. »* ou *« Animateur mis à jour. »*
+
+    ### 12.2 Bloc « Ma fiche animateur »
+
+    Visible pour **tout le monde**, y compris les administrateurs (un administrateur peut être lui-même animateur sans forcément avoir le groupe Streamers).
+
+    - Si tu as une fiche animateur : elle affiche ton identifiant, tes modes autorisés, ton niveau de chiffrement SRT, ta politique de fin de direct, si tu peux diffuser hors créneau, et une ligne cliquable « Secrets — changé le [date] — voir » qui ouvre la fenêtre des secrets.
+    - Si tu n'en as pas (et que tu n'es pas administrateur) : *« Aucune fiche animateur rattachée à « [ton nom] ». Demande à un admin de la créer. »*
+    - Si l'accès à ta fiche est explicitement refusé (par exemple compte désactivé) : le message d'erreur exact renvoyé par le serveur s'affiche.
+
+    ### 12.3 Bloc « Direct »
+
+    Affiche en permanence (mis à jour toutes les 5 secondes) :
+    - **« À l'antenne : »** le nom de l'animateur actuellement en direct, ou « — personne — », avec la précision « (connecté) » ou « (pas encore connecté) ».
+    - Le **mode** (SRT ou RTMP) et le chiffrement si SRT.
+    - Si RTMP : l'URL est scindée en deux lignes copiables séparément — **« Serveur »** et **« Clé de flux »** (chacune avec un bouton **Copier**, qui devient « Copié ! » brièvement après le clic) — c'est le format attendu par un logiciel comme OBS.
+    - Si SRT (ou un autre format d'URL) : une seule ligne **« URL d'ingest »**, copiable.
+    - Le titre de flux et la politique de fin de direct de l'animateur en cours, si connus.
+    - Si le serveur de diffusion lui-même signale un problème : un bandeau rouge avec le message technique exact.
+
+    **Formulaire de démarrage/arrêt** (visible si tu es administrateur, ou si tu as toi-même une fiche animateur) :
+    - **Animateur** : menu déroulant (admin) ou champ figé avec ton propre nom (non-admin).
+    - **Mode** : SRT ou RTMP (les modes proposés dépendent de ce que l'animateur choisi est autorisé à utiliser).
+    - **Chiffrement (session, non enregistré)** : uniquement si mode SRT — permet de forcer un niveau de chiffrement différent de celui enregistré sur la fiche, juste pour cette session, sans modifier la fiche.
+    - **Titre à l'antenne (optionnel)** : si vide, le titre du créneau programmé est utilisé à la place.
+    - **Forcer (couper l'autre)** : case à cocher, **administrateurs uniquement** — permet de reprendre la main sur un ingest déjà ouvert par quelqu'un d'autre.
+
+    Boutons : **Arrêter** (toujours visible) et **Démarrer / armer** (visible seulement si tu as le droit d'agir sur cet animateur).
+
+    **Une distinction technique importante à connaître (indiquée en note de bas de section)** :
+    > *« SRT : l'ingest ne s'arme jamais en avance — il s'arme automatiquement 10 minutes avant le début du créneau, jamais avant. Rien à cliquer : « Démarrer » ne fait que récupérer l'URL déjà ouverte. RTMP : rien n'est pré-armé, il faut « Démarrer » soi-même. Ne relance pas si la réponse dit « déjà en place ». « connecté » faux juste après un démarrage n'est pas un échec. »*
+
+    En clair :
+    - En **SRT**, le système ouvre lui-même la connexion 10 minutes avant l'heure prévue du créneau — cliquer sur « Démarrer / armer » ne fait alors que **récupérer** l'URL déjà générée, ce n'est pas toi qui déclenches l'ouverture.
+    - En **RTMP**, rien ne s'ouvre automatiquement : c'est à toi de cliquer sur « Démarrer / armer » au moment voulu.
+    - Un message *« Ingest déjà en place — ne relance pas le démarrage, l'URL existante est renvoyée »* n'est pas une erreur — inutile de recliquer.
+    - Voir la mention « (pas encore connecté) » ou « connecté » à `false` juste après un démarrage est **normal** : la connexion effective (le logiciel de streaming qui se branche réellement) prend quelques secondes.
+    - Si l'ingest est déjà tenu par quelqu'un d'autre : *« Ingest déjà ouvert pour [nom]. »*, suivi de *« Coche « Forcer » pour reprendre l'antenne. »* (admin) ou *« Un admin peut forcer. »* (non-admin).
+
+    ### 12.4 La fenêtre « Secrets »
+
+    Ouverte depuis l'icône clé (liste admin) ou depuis « Ma fiche animateur ».
+
+    - Avertissement permanent : *« Ne les partage pas, ne les mets pas dans une URL publique. Régénérer coupe la validité des URL d'ingest ; si l'animateur est à l'antenne, il faudra ré-armer son direct (force, admin). »*
+    - Si l'animateur concerné est **actuellement en direct**, un bandeau supplémentaire apparaît avec l'URL (ou Serveur+Clé) **en cours d'utilisation**, copiable — c'est la seule façon de la retrouver si tu l'as perdue pendant que le direct est actif.
+    - **Secret SRT** et **Secret RTMP** : affichés en lecture seule (cliquer dans le champ sélectionne tout le texte pour faciliter la copie), chacun avec son bouton Copier. Note technique en bas : *« Les secrets seuls ne suffisent pas à se connecter : l'URL complète (port compris) n'existe que pendant une session active — elle s'affiche ci-dessus quand [animateur] est à l'antenne, ou dans le panneau « Direct » après un « Démarrer / armer ». »*
+    - Bouton **« Fermer »**.
+    - Bouton **« Régénérer »** (rouge, dangereux) : fait tourner **les deux secrets en même temps**. Confirmation implicite par l'avertissement affiché — **il n'y a pas de seconde fenêtre de confirmation**, clique dessus seulement si tu es sûr. Une fois régénérés, les anciens identifiants ne fonctionnent plus **immédiatement**, même si l'animateur était en cours de diffusion (il faudra qu'un administrateur relance son direct avec l'option « Forcer »).
+
+    ---
+
+    ## 13. Debug API
+
+    Route : `/dashboard/debug-api`. Accès : **Administrateurs uniquement.**
+
+    Un outil **technique**, destiné au support et au diagnostic — pas à un usage quotidien de programmation ou d'édition.
+
+    - Des dizaines de requêtes prédéfinies, groupées par domaine (planning public, programmations, animateurs, direct, utilisateurs, médiathèque, playlists, cache/streaming legacy), exécutables une par une.
+    - Un bouton pour lancer en une fois tous les GET/HEAD (requêtes de lecture seule, donc sans risque).
+    - Un bouton pour lancer **tous** les préréglages d'un coup, y compris ceux qui **modifient réellement des données** (créer un animateur de test, faire tourner des secrets, supprimer une musique) — une fenêtre de confirmation s'affiche avant de lancer, car cela peut avoir des effets réels et gênants si utilisé sans réfléchir.
+    - Un décodeur du jeton de connexion actuel (JWT) et du profil OIDC, pour vérifier ce que ton compte porte réellement comme informations/groupes.
+    - Une validation automatique de certaines réponses contre les schémas de données attendus, avec le détail de ce qui ne correspond pas si un souci est détecté.
+    - Un constructeur de requête personnalisée (méthode, chemin, corps, activer/désactiver l'authentification) pour tester un appel précis.
+
+    **Utilise cette page uniquement si tu sais ce que tu fais ou sous la conduite d'un développeur** — plusieurs actions y sont réellement destructrices.
+
+    ---
+
+    ## 14. Cache (journal des requêtes)
+
+    Route : `/dashboard/cache`. Accès : **Administrateurs uniquement.**
+
+    > Le nom de cette page dans le menu (« Cache ») est trompeur : elle n'affiche **pas** un outil de gestion de cache, mais un **journal des requêtes réseau** faites par l'application elle-même.
+
+    - Chaque ligne du journal correspond à un appel que le panel a fait à ses propres routes internes depuis que tu as ouvert cette page (ou depuis le dernier vidage) : méthode, URL, statut de réponse, durée.
+    - En cliquant sur une ligne, elle se déplie et montre le détail complet : en-têtes et corps de la requête envoyée, en-têtes et corps de la réponse reçue. **Tout jeton d'authentification est automatiquement masqué**, il n'apparaît jamais en clair ici.
+    - Un filtre permet de restreindre l'affichage par méthode ou par URL.
+    - Bouton **« Vider le journal »** : efface tout l'historique affiché (ne supprime rien côté serveur, juste l'affichage local).
+    - Le journal est **entièrement local à cette page ouverte** : il repart de zéro à chaque rechargement ou fermeture de la page — il n'est jamais partagé avec quelqu'un d'autre ni conservé quelque part.
+
+    **Utilité typique** : un administrateur qui essaie de comprendre pourquoi une action « ne s'enregistre pas » peut ouvrir cette page, refaire l'action problématique ailleurs dans un autre onglet, puis revenir ici pour voir exactement quelle requête a été envoyée et ce que le serveur a répondu.
+
+    ---
+
+    ## 15. Glossaire
+
+    | Terme | Signification |
+    |---|---|
+    | **Animateur** | Compte technique portant les identifiants de connexion pour diffuser en direct (distinct d'un compte de connexion au panel, même s'il porte souvent le même nom) |
+    | **Catégorie (de médiathèque)** | Musiques / Jingles / Podcasts / Promos / VOD / Autres — détermine où un fichier apparaît et ses champs obligatoires |
+    | **Créneau (slot)** | Une entrée du planning : jour/heure, durée, type de contenu, priorité |
+    | **Direct / ingest** | La connexion technique active pendant qu'un animateur diffuse en direct |
+    | **Ingest RTMP** | Un des deux protocoles de diffusion en direct supportés ; identifiants sous forme Serveur + Clé de flux |
+    | **Ingest SRT** | L'autre protocole supporté ; s'arme automatiquement 10 minutes avant un créneau programmé |
+    | **Priorité** | Nombre 0-100 qui détermine quel créneau gagne en cas de chevauchement horaire |
+    | **Repli (fallback)** | La playlist qui joue quand aucun créneau n'est programmé à un instant donné |
+    | **SACEM** | Société française de gestion des droits d'auteur — chaque musique doit porter une référence de son registre |
+    | **Validation (validé)** | Statut d'une musique confirmée par un administrateur, seule condition pour qu'elle soit utilisable dans Programmations/Playlists/Médiathèque |
+    | **VOD / Rediffusion** | Catégorie de médiathèque pour le contenu à rejouer (rediffusions d'émissions) |
+
+    ---
+
+    ## 16. Questions fréquentes / dépannage
+
+    **J'ai uploadé un fichier mais je ne le vois pas dans la liste.**
+    As-tu cliqué sur « Actualiser » après l'upload ? La liste ne se recharge jamais toute seule après un envoi.
+
+    **Ma musique uploadée n'apparaît pas dans Programmations / Playlists / Médiathèque.**
+    Une musique doit d'abord être **validée** par un administrateur (page Validation musiques) avant d'être utilisable ailleurs. Ce n'est vrai que pour la catégorie Musiques — les autres catégories sont utilisables dès l'upload.
+
+    **Je ne peux pas enregistrer mon planning, un message de « chevauchement » apparaît.**
+    Deux créneaux actifs ont exactement la même priorité et se chevauchent dans le temps. Change la priorité de l'un des deux, ou désactive-en un (case « Actif »).
+
+    **J'ai enregistré mon planning mais rien n'a changé à l'antenne.**
+    Un enregistrement peut mettre jusqu'à 30 minutes avant d'être pris en compte par le serveur de diffusion — c'est normal, patiente.
+
+    **Le bouton « Uploader » reste grisé.**
+    Il manque au moins un champ obligatoire sur au moins un fichier de la file — la liste exacte des champs manquants s'affiche sous chaque fichier concerné.
+
+    **Je ne trouve pas le bouton pour modifier/supprimer une piste.**
+    Ces boutons ne sont visibles que pour les comptes administrateurs. Si ton rôle est Uploader Radio simple, tu ne les verras jamais — ce n'est pas une erreur.
+
+    **Je viens de démarrer un direct mais ça affiche « pas encore connecté ».**
+    C'est normal juste après un démarrage : la connexion réelle du logiciel de streaming prend quelques secondes. Si ça persiste plus d'une minute, vérifie la configuration du logiciel de streaming (OBS, etc.) avec les identifiants affichés dans la fenêtre « Secrets ».
+
+    **Un message dit « Ingest déjà en place » quand j'essaie de démarrer.**
+    Ce n'est pas une erreur : la connexion est déjà ouverte, inutile de recliquer. L'URL déjà active t'est simplement redonnée.
+
+    **J'ai perdu les identifiants de connexion de mon animateur.**
+    Si le direct est actuellement actif, ouvre la fenêtre « Secrets » : l'URL en cours d'utilisation y est affichée et copiable. Sinon, seul un administrateur peut te les redonner (ou les régénérer, ce qui invalide les précédents).
+
+    **J'ai une erreur « session expirée ou non autorisée ».**
+    Déconnecte-toi puis reconnecte-toi.
+
+    **J'ai une erreur « erreur interne du serveur backend » qui persiste.**
+    Ce n'est pas quelque chose que tu peux résoudre toi-même — préviens un administrateur ou un développeur avec le message exact affiché.
+
+    **Pourquoi la page « Cache » n'affiche pas un vrai cache ?**
+    C'est une particularité connue de l'outil : cette page affiche en réalité un journal des requêtes réseau, utile pour du diagnostic technique. Le nom du menu n'a pas été mis à jour en conséquence.

@@ -1,6 +1,6 @@
 # wiki-streamers
 
-Wiki de documentation pour aider les streamers Fluff Radio a configurer OBS et diffuser sur le serveur RTMP.
+Wiki de documentation pour aider les streamers Fluff Radio a passer en direct (SRT/RTMP, panel, OBS), et guide complet du panel d'administration `programmation.fluffradio.com` pour le staff.
 
 Le site est bilingue avec une structure i18n complete basee sur Jekyll.
 
@@ -18,11 +18,17 @@ Le site est bilingue avec une structure i18n complete basee sur Jekyll.
 
 ## Parcours utilisateur cible
 
-1. Lire les pre-requis
-2. Recuperer les identifiants (serveur RTMP + passphrase unique)
+### Streamers / animateurs
+
+1. Lire les pre-requis (mode SRT ou RTMP du compte)
+2. Recuperer son lien de connexion depuis le panel (automatique 10 min avant en SRT, manuel en RTMP)
 3. Configurer OBS
 4. Lancer le stream
 5. Resoudre les incidents via le troubleshooting
+
+### Staff (admins, programmateurs, uploadeurs...)
+
+Guide complet du panel `programmation.fluffradio.com` : `fr/panel-admin/` (ref `admin-guide`), `en/panel-admin/`. Couvre l'authentification, chaque page du tableau de bord (mediatheque, fichiers audio, playlists, programmations, habillage d'antenne, validation musiques, streamers, debug API, cache), un glossaire et une FAQ.
 
 ## Convention i18n
 
@@ -42,6 +48,10 @@ Exemple logique:
 
 - FR: `fr/guides/configurer-obs.md` avec `lang: fr`, `ref: configure-obs`
 - EN: `en/guides/configure-obs.md` avec `lang: en`, `ref: configure-obs`
+- FR: `fr/panel-admin/index.md` avec `lang: fr`, `ref: admin-guide`
+- EN: `en/panel-admin/index.md` avec `lang: en`, `ref: admin-guide`
+
+Note: la page `admin-guide` n'est pas enregistree dans `_includes/page-nav.html` (qui ne gere que le parcours streamer classique) — elle affiche donc un fil d'ariane simple (Accueil > titre) sans navigation precedent/suivant, ce qui est attendu vu sa taille (page de reference unique, pas une etape d'un parcours lineaire).
 
 ## Contenu volontairement sans valeurs fixes
 
