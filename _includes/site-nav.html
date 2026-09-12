@@ -1,0 +1,52 @@
+{% assign lang = page.lang | default: site.default_lang %}
+{% assign ref = page.ref | default: 'home' %}
+
+{% if lang == 'fr' %}
+  {% assign home_url = '/fr/' | relative_url %}
+  {% assign guides_url = '/fr/guides/' | relative_url %}
+  {% assign troubleshooting_url = '/fr/troubleshooting/' | relative_url %}
+  {% assign admin_url = '/fr/panel-admin/' | relative_url %}
+{% else %}
+  {% assign home_url = '/en/' | relative_url %}
+  {% assign guides_url = '/en/guides/' | relative_url %}
+  {% assign troubleshooting_url = '/en/troubleshooting/' | relative_url %}
+  {% assign admin_url = '/en/panel-admin/' | relative_url %}
+{% endif %}
+
+{% assign in_guides = false %}
+{% assign in_troubleshooting = false %}
+{% assign in_admin = false %}
+{% case ref %}
+  {% when 'guides-home', 'prerequisites', 'credentials', 'configure-obs', 'go-live' %}
+    {% assign in_guides = true %}
+  {% when 'troubleshooting-home', 'common-issues' %}
+    {% assign in_troubleshooting = true %}
+  {% when 'admin-guide' %}
+    {% assign in_admin = true %}
+{% endcase %}
+
+<nav class="site-nav" aria-label="Site" style="margin: 0 0 0.75rem 0; padding: 0.6rem 0.9rem; border: 1px solid #d7dbe3; border-radius: 8px; background: #f6f8fa; display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.95rem;">
+  {% if ref == 'home' %}
+    <strong>{% include t.html key='nav_home' %}</strong>
+  {% else %}
+    <a href="{{ home_url }}">{% include t.html key='nav_home' %}</a>
+  {% endif %}
+
+  {% if in_guides %}
+    <strong>{% include t.html key='nav_guides' %}</strong>
+  {% else %}
+    <a href="{{ guides_url }}">{% include t.html key='nav_guides' %}</a>
+  {% endif %}
+
+  {% if in_troubleshooting %}
+    <strong>{% include t.html key='nav_troubleshooting' %}</strong>
+  {% else %}
+    <a href="{{ troubleshooting_url }}">{% include t.html key='nav_troubleshooting' %}</a>
+  {% endif %}
+
+  {% if in_admin %}
+    <strong>{% include t.html key='nav_admin_panel' %}</strong>
+  {% else %}
+    <a href="{{ admin_url }}">{% include t.html key='nav_admin_panel' %}</a>
+  {% endif %}
+</nav>

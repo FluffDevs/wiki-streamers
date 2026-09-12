@@ -5,5 +5,6 @@ lang: en
 ref: admin-guide
 ---
 
+{% include site-nav.html %}
 {% include lang-switcher.html %}
-{% include page-nav.html %}
+{% include render-i18n-page.html %}
